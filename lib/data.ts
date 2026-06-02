@@ -56,8 +56,8 @@ export const products: Product[] = [
   },
   {
     id: 5,
-    name: "[ARIRANG] Zip-up Hoodie (Charcoal)",
-    price: 120.91,
+    name: "[ARIRANG] Zip-up Hoodie (Black)",
+    price: 200.00,
     image: "/images/hoodie-black-front.jpg",
     images: { front: "/images/hoodie-black-front.jpg", back: "/images/hoodie-black-back.jpg" },
     badges: ["EXCLUSIVE", "PRE-ORDER"],
@@ -65,7 +65,7 @@ export const products: Product[] = [
     category: "ARIRANG",
     stock: 40,
     sizes: ["S", "M", "L", "XL", "XXL"],
-    description: "Official BTS WORLD TOUR [ARIRANG] Zip-up Hoodie in Charcoal. Features ARIRANG WORLD TOUR embroidered logo.",
+    description: "Official BTS WORLD TOUR [ARIRANG] Zip-up Hoodie in Black. Features the iconic \"ARI ARI VEGAS RA NG\" graphic print on the front with star detail along the hood. Exclusive pre-order item.",
   },
   {
     id: 6,
