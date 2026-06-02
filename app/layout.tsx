@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { CartProvider } from "@/lib/cart-context";
+import { WishlistProvider } from "@/lib/wishlist-context";
 import Header from "@/components/Header";
 import CartDrawer from "@/components/CartDrawer";
 
@@ -33,9 +34,11 @@ export default function RootLayout({
     <html lang="en" className="bg-white" data-scroll-behavior="smooth">
       <body className="font-sans antialiased">
         <CartProvider>
-          <Header />
-          {children}
-          <CartDrawer />
+          <WishlistProvider>
+            <Header />
+            {children}
+            <CartDrawer />
+          </WishlistProvider>
         </CartProvider>
       </body>
     </html>

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/lib/cart-context";
 import { products } from "@/lib/data";
-import { ChevronLeft, Check, Package, MapPin, CreditCard } from "lucide-react";
+import { ChevronLeft, Package, MapPin, CreditCard } from "lucide-react";
 
 type Step = "checkout" | "shipping" | "payment";
 
@@ -13,7 +13,6 @@ export default function CheckoutPage() {
   const { items, totalPrice, clearCart } = useCart();
   const [step, setStep] = useState<Step>("checkout");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -58,8 +57,8 @@ export default function CheckoutPage() {
       });
 
       if (response.ok) {
-        setSubmitted(true);
         clearCart();
+        router.push("/order-confirmation");
       } else {
         alert("Something went wrong. Please try again.");
       }
@@ -69,29 +68,6 @@ export default function CheckoutPage() {
       setIsSubmitting(false);
     }
   };
-
-  if (submitted) {
-    return (
-      <main className="px-4 py-16 text-center max-w-md mx-auto">
-        <div className="mb-6">
-          <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Check className="w-10 h-10 text-green-600" />
-          </div>
-          <h1 className="text-2xl font-bold mb-3">Request Sealed!</h1>
-          <p className="text-gray-600">
-            Thank you for your order. We will process it shortly and contact you at{" "}
-            <span className="font-medium">{formData.email}</span>.
-          </p>
-        </div>
-        <button
-          onClick={() => router.push("/")}
-          className="w-full bg-black text-white py-3.5 rounded-lg font-semibold hover:bg-gray-800 transition"
-        >
-          Continue Shopping
-        </button>
-      </main>
-    );
-  }
 
   if (items.length === 0) {
     return (

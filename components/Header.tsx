@@ -2,8 +2,9 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { ShoppingBag, Menu, X, ChevronDown, MapPin, Calendar, Users, Music } from "lucide-react";
+import { ShoppingBag, Menu, X, ChevronDown, MapPin, Calendar, Music, Heart } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
+import { useWishlist } from "@/lib/wishlist-context";
 
 const btsMembers = [
   { name: "RM", fullName: "Kim Namjoon", role: "Leader, Rapper" },
@@ -37,6 +38,7 @@ const mainTabs = [
 
 export default function Header() {
   const { totalItems, setIsOpen } = useCart();
+  const { wishlist } = useWishlist();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [artistDropdownOpen, setArtistDropdownOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("'RANG' Pickup");
@@ -157,6 +159,20 @@ export default function Header() {
 
         {/* Right Actions */}
         <div className="flex items-center gap-3">
+          {/* Wishlist icon */}
+          <Link
+            href="/wishlist"
+            className="relative p-2 hover:bg-gray-100 rounded-full transition-colors"
+            aria-label="Wishlist"
+          >
+            <Heart size={22} />
+            {wishlist.length > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1">
+                {wishlist.length}
+              </span>
+            )}
+          </Link>
+
           <button
             onClick={() => {
               setIsOpen(true);

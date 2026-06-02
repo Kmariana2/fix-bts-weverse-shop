@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import Link from "next/link";
-import { Plane, RotateCcw } from "lucide-react";
+import { Plane, RotateCcw, Heart } from "lucide-react";
 import { Product } from "@/types";
+import { useWishlist } from "@/lib/wishlist-context";
 
 interface ProductCardProps {
   product: Product;
@@ -38,6 +39,8 @@ const playFlipSound = () => {
 };
 
 export default function ProductCard({ product }: ProductCardProps) {
+  const { toggleWishlist, isWishlisted } = useWishlist();
+  const wishlisted = isWishlisted(product.id);
   const [isFlipped, setIsFlipped] = useState(false);
   const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -229,6 +232,24 @@ export default function ProductCard({ product }: ProductCardProps) {
             </div>
           )}
         </div>
+
+        {/* Wishlist Button */}
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            triggerHaptic("light");
+            toggleWishlist(product.id);
+          }}
+          className="absolute top-2 left-2 z-30 w-8 h-8 flex items-center justify-center rounded-full bg-white/90 backdrop-blur-sm shadow-sm hover:scale-110 active:scale-95 transition-all duration-150"
+          aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
+        >
+          <Heart
+            className={`w-4 h-4 transition-colors duration-150 ${
+              wishlisted ? "fill-red-500 text-red-500" : "text-gray-400"
+            }`}
+          />
+        </button>
 
         {/* Flip Button */}
         {hasBackImage && product.stock > 0 && (

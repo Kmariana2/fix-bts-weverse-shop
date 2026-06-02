@@ -2,9 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Heart } from "lucide-react";
 import { products } from "@/lib/data";
 import { useCart } from "@/lib/cart-context";
+import { useWishlist } from "@/lib/wishlist-context";
 
 interface ProductPageClientProps {
   id: number;
@@ -13,6 +14,7 @@ interface ProductPageClientProps {
 export default function ProductPageClient({ id }: ProductPageClientProps) {
   const router = useRouter();
   const { addItem } = useCart();
+  const { toggleWishlist, isWishlisted } = useWishlist();
   const product = products.find((p) => p.id === id);
 
   const [selectedSize, setSelectedSize] = useState<string>("");
@@ -42,6 +44,7 @@ export default function ProductPageClient({ id }: ProductPageClientProps) {
     <main className="pb-8">
       {/* Back button */}
       <div className="px-4 py-3">
+        <div className="flex items-center justify-between">
         <button
           onClick={() => router.push("/")}
           className="flex items-center gap-1 text-sm text-gray-600 hover:text-black transition"
@@ -49,6 +52,21 @@ export default function ProductPageClient({ id }: ProductPageClientProps) {
           <ArrowLeft className="w-4 h-4" />
           Back
         </button>
+        <button
+          onClick={() => toggleWishlist(product.id)}
+          className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-red-500 transition"
+          aria-label={isWishlisted(product.id) ? "Remove from wishlist" : "Add to wishlist"}
+        >
+          <Heart
+            className={`w-5 h-5 transition-colors ${
+              isWishlisted(product.id) ? "fill-red-500 text-red-500" : ""
+            }`}
+          />
+          <span className="hidden sm:inline">
+            {isWishlisted(product.id) ? "Wishlisted" : "Wishlist"}
+          </span>
+        </button>
+        </div>
       </div>
 
       {/* Image Gallery */}
