@@ -297,9 +297,9 @@ export const products: Product[] = [
     id: 21,
     name: "[ARIRANG] S/S T-Shirt (V)",
     price: 69.00,
-    image: "/images/products/ss-tshirt-jin-front.png",
+    image: "/images/products/ss-tshirt-jungkook-front.png",
     images: { 
-      front: "/images/products/ss-tshirt-jin-front.png",
+      front: "/images/products/ss-tshirt-jungkook-front.png",
       back: "/images/products/ss-tshirt-v-back.png"
     },
     badges: ["EXCLUSIVE", "PRE-ORDER"],
@@ -313,9 +313,9 @@ export const products: Product[] = [
     id: 22,
     name: "[ARIRANG] S/S T-Shirt (Jimin)",
     price: 69.00,
-    image: "/images/products/ss-tshirt-jimin-front.png",
+    image: "/images/products/ss-tshirt-jin-front.png",
     images: { 
-      front: "/images/products/ss-tshirt-jimin-front.png",
+      front: "/images/products/ss-tshirt-jin-front.png",
       back: "/images/products/ss-tshirt-jimin-back.png"
     },
     badges: ["EXCLUSIVE", "PRE-ORDER"],
@@ -362,7 +362,10 @@ export const products: Product[] = [
     name: "[ARIRANG] S/S T-Shirt (j-hope)",
     price: 69.00,
     image: "/images/products/ss-tshirt-jimin-front.png",
-    images: { front: "/images/products/ss-tshirt-jimin-front.png" },
+    images: { 
+      front: "/images/products/ss-tshirt-jimin-front.png",
+      back: "/images/products/ss-tshirt-jimin-back.png"
+    },
     badges: ["EXCLUSIVE", "PRE-ORDER"],
     shipping: "Shipped from US",
     category: "ARIRANG",
