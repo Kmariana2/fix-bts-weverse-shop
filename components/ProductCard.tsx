@@ -288,17 +288,17 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
         <div className="flex flex-wrap gap-1.5 mt-1.5">
           {product.badges.includes("EXCLUSIVE") && (
-            <span className="inline-flex items-center border border-[#00B8D4] text-[#00B8D4] text-[10px] font-semibold rounded-full px-2.5 py-0.5 tracking-wide">
+            <span className="inline-flex items-center border border-[#00B8D4] text-[#00B8D4] text-[10px] font-semibold rounded-full px-2.5 py-1 tracking-wide uppercase">
               EXCLUSIVE
             </span>
           )}
           {product.badges.includes("PRE-ORDER") && (
-            <span className="inline-flex items-center bg-purple-100 text-purple-700 text-[10px] font-semibold rounded-full px-2.5 py-0.5 tracking-wide">
+            <span className="inline-flex items-center bg-[#00B8D4] text-white text-[10px] font-semibold rounded-full px-2.5 py-1 tracking-wide uppercase">
               PRE-ORDER
             </span>
           )}
           {product.shipping && (
-            <span className="inline-flex items-center gap-1 bg-gray-100 text-gray-600 text-[10px] rounded-full px-2.5 py-0.5">
+            <span className="inline-flex items-center gap-1 bg-gray-100 text-gray-600 text-[10px] rounded-full px-2.5 py-1 uppercase">
               <Plane className="w-3 h-3" />
               {product.shipping}
             </span>

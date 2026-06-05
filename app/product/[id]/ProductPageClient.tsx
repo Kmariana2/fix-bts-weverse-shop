@@ -101,27 +101,29 @@ export default function ProductPageClient({ id }: ProductPageClientProps) {
       </div>
 
       {/* Product Info */}
-      <div className="px-4 mt-4 space-y-3">
-        <h1 className="text-xl font-bold text-black">{product.name}</h1>
-        <div className="flex items-baseline gap-1">
-          <span className="text-xs text-gray-500 font-normal">USD</span>
-          <span className="text-xl text-black font-bold">${product.price.toFixed(2)}</span>
+      <div className="px-4 mt-6 space-y-4">
+        <div>
+          <h1 className="text-lg font-bold text-black mb-2">{product.name}</h1>
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-xs text-gray-400 font-normal">USD</span>
+            <span className="text-2xl text-black font-bold">${product.price.toFixed(2)}</span>
+          </div>
         </div>
 
         {/* Badges */}
         <div className="flex flex-wrap gap-2">
           {product.badges.includes("EXCLUSIVE") && (
-            <span className="inline-flex items-center border border-[#00B8D4] text-[#00B8D4] text-[11px] font-medium rounded px-2 py-0.5 w-fit">
+            <span className="inline-flex items-center border border-[#00B8D4] text-[#00B8D4] text-[11px] font-semibold rounded-full px-2.5 py-1 w-fit uppercase">
               EXCLUSIVE
             </span>
           )}
           {product.badges.includes("PRE-ORDER") && (
-            <span className="inline-flex items-center border border-orange-500 text-orange-500 text-[11px] font-medium rounded px-2 py-0.5 w-fit">
+            <span className="inline-flex items-center bg-[#00B8D4] text-white text-[11px] font-semibold rounded-full px-2.5 py-1 w-fit uppercase">
               PRE-ORDER
             </span>
           )}
           {product.shipping && (
-            <span className="inline-flex items-center gap-1 bg-gray-100 text-gray-600 text-[11px] rounded px-2 py-0.5 w-fit">
+            <span className="inline-flex items-center gap-1 bg-gray-100 text-gray-600 text-[11px] rounded-full px-2.5 py-1 w-fit uppercase">
               {product.shipping}
             </span>
           )}
@@ -130,7 +132,7 @@ export default function ProductPageClient({ id }: ProductPageClientProps) {
         {/* Member Variants Gallery for Jersey */}
         {hasMemberVariants && (
           <div>
-            <p className="text-sm font-medium mb-3">Select Member</p>
+            <p className="text-sm font-semibold mb-3">Select Member</p>
             <div className="grid grid-cols-4 gap-2">
               {product.memberVariants!.map((variant) => (
                 <button
@@ -162,16 +164,16 @@ export default function ProductPageClient({ id }: ProductPageClientProps) {
         {/* Size Selector */}
         {product.sizes && product.sizes.length > 0 && (
           <div>
-            <p className="text-sm font-medium mb-2">Size</p>
+            <p className="text-sm font-semibold mb-3">Size</p>
             <div className="flex gap-2 flex-wrap">
               {product.sizes.map((size) => (
                 <button
                   key={size}
                   onClick={() => setSelectedSize(size)}
-                  className={`px-4 py-2 rounded-md text-sm font-medium border transition ${
+                  className={`px-4 py-2.5 rounded-lg text-sm font-medium border transition ${
                     selectedSize === size
                       ? "bg-black text-white border-black"
-                      : "bg-white text-black border-gray-300 hover:border-black"
+                      : "bg-white text-black border-gray-300 hover:border-gray-500"
                   }`}
                 >
                   {size}
@@ -196,12 +198,12 @@ export default function ProductPageClient({ id }: ProductPageClientProps) {
             }
           }}
           disabled={!canAddToCart}
-          className={`w-full py-3 rounded-lg font-medium text-center transition mt-4 ${
+          className={`w-full py-3.5 rounded-lg font-semibold text-center transition mt-6 uppercase tracking-wide ${
             isOutOfStock
               ? "bg-gray-200 text-gray-500 cursor-not-allowed"
               : !canAddToCart
               ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-              : "bg-black text-white hover:bg-gray-800"
+              : "bg-black text-white hover:bg-gray-800 active:bg-gray-900"
           }`}
         >
           {isOutOfStock ? "SOLD OUT" : hasMemberVariants && !selectedMember ? "Select a Member" : "Add to Cart"}
