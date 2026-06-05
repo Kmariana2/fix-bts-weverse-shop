@@ -69,14 +69,17 @@ export const products: Product[] = [
     name: "[ARIRANG] Zip-up Hoodie (Charcoal)",
     // Weverse: USD$120.91 — Zip-up Hoodie (Charcoal)
     price: 120.91,
-    image: "/images/hoodie-black-front.jpg",
-    images: { front: "/images/hoodie-black-front.jpg", back: "/images/hoodie-black-back.jpg" },
+    image: "/images/products/refined/arirang-zip-up-hoodie-charcoal.jpg",
+    images: { 
+      front: "/images/products/refined/arirang-zip-up-hoodie-charcoal.jpg",
+      detail: "/images/products/refined/arirang-zip-up-hoodie-charcoal.jpg" 
+    },
     badges: ["EXCLUSIVE", "PRE-ORDER"],
     shipping: "Shipped from KR",
     category: "ARIRANG",
     stock: 0,
     sizes: ["S", "M", "L", "XL", "XXL"],
-    description: "Official BTS WORLD TOUR [ARIRANG] Zip-up Hoodie in Charcoal. Features the iconic \"ARI ARI VEGAS RA NG\" graphic print on the front with star detail along the hood.",
+    description: "Official BTS WORLD TOUR [ARIRANG] Zip-up Hoodie in Charcoal. Features a vintage distressed finish with custom embroidery and a relaxed fit.",
   },
   {
     id: 18,
