@@ -264,38 +264,10 @@ export const products: Product[] = [
     description: "Official j-hope Tour 'HOPE ON THE STAGE' Hoodie in Black.",
   },
   // ── BTS ──────────────────────────────────────────────────────────────────
-  {
-    id: 19,
-    name: "[ARIRANG] Ball Cap (Red)",
-    price: 69.00,
-    image: "/images/products/ball-cap-red.png",
-    images: { front: "/images/products/ball-cap-red.png" },
-    badges: ["EXCLUSIVE"],
-    shipping: "Shipped from US",
-    category: "ARIRANG",
-    stock: 100,
-    sizes: ["ONE SIZE"],
-    description: "Official BTS Ball Cap in Red. Exclusive pre-order item.",
-  },
-  {
-    id: 20,
-    name: "[ARIRANG] S/S T-Shirt (Jung Kook)",
-    price: 69.00,
-    image: "/images/products/ss-tshirt-jhope-front.png",
-    images: { 
-      front: "/images/products/ss-tshirt-jhope-front.png",
-      back: "/images/products/ss-tshirt-jungkook-back.png"
-    },
-    badges: ["EXCLUSIVE", "PRE-ORDER"],
-    shipping: "Shipped from US",
-    category: "ARIRANG",
-    stock: 100,
-    sizes: ["S", "M", "L", "XL"],
-    description: "Official BTS S/S T-Shirt (Jung Kook). Exclusive pre-order item.",
-  },
+
   {
     id: 21,
-    name: "[ARIRANG] S/S T-Shirt (V)",
+    name: "[ARIRANG] S/S T-Shirt (SUGA)",
     price: 69.00,
     image: "/images/products/ss-tshirt-jungkook-front.png",
     images: { 
@@ -307,7 +279,7 @@ export const products: Product[] = [
     category: "ARIRANG",
     stock: 100,
     sizes: ["S", "M", "L", "XL"],
-    description: "Official BTS S/S T-Shirt (V). Exclusive pre-order item.",
+    description: "Official BTS S/S T-Shirt (SUGA). Exclusive pre-order item.",
   },
   {
     id: 22,
@@ -389,21 +361,7 @@ export const products: Product[] = [
     sizes: ["S", "M", "L", "XL"],
     description: "Official BTS S/S T-Shirt (BTS). Exclusive pre-order item.",
   },
-  {
-    id: 27,
-    name: "[ARIRANG] S/S T-Shirt (SUGA)",
-    price: 69.00,
-    image: "/images/products/ss-tshirt-jungkook-front.png",
-    images: { 
-      front: "/images/products/ss-tshirt-jungkook-front.png"
-    },
-    badges: ["EXCLUSIVE", "PRE-ORDER"],
-    shipping: "Shipped from US",
-    category: "ARIRANG",
-    stock: 100,
-    sizes: ["S", "M", "L", "XL"],
-    description: "Official BTS S/S T-Shirt (SUGA). Exclusive pre-order item.",
-  },
+
 
 ];
 
