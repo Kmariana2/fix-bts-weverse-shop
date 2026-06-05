@@ -263,37 +263,7 @@ export const products: Product[] = [
     sizes: ["S", "M", "L", "XL", "XXL"],
     description: "Official j-hope Tour 'HOPE ON THE STAGE' Hoodie in Black.",
   },
-  {
-    id: 16,
-    name: "[j-hope] HOPE ON THE STAGE Tour T-Shirt (Brown)",
-    // Weverse: USD$35.05 — Tour T-Shirt (Brown)
-    price: 35.05,
-    image: "/images/products/refined/hope-tour-tshirt-brown-front.jpg",
-    images: { 
-      front: "/images/products/refined/hope-tour-tshirt-brown-front.jpg", 
-      detail: "/images/products/refined/hope-tour-tshirt-brown-detail.jpg" 
-    },
-    badges: ["EXCLUSIVE"],
-    shipping: "Shipped from KR",
-    category: "HOPE ON THE STAGE",
-    stock: 45,
-    sizes: ["S", "M", "L", "XL"],
-    description: "Official j-hope Tour 'HOPE ON THE STAGE' Tour T-Shirt in Brown.",
-  },
-  {
-    id: 17,
-    name: "[j-hope] HOPE ON THE STAGE Stripe PK T-Shirt (Multi)",
-    // Not listed on current Weverse page — original price kept
-    price: 35.05,
-    image: "/images/products/refined/hope-stripe-pk-tshirt-multi.png",
-    images: { front: "/images/products/refined/hope-stripe-pk-tshirt-multi.png" },
-    badges: ["EXCLUSIVE"],
-    shipping: "Shipped from KR",
-    category: "HOPE ON THE STAGE",
-    stock: 50,
-    sizes: ["S", "M", "L", "XL"],
-    description: "Official j-hope Tour 'HOPE ON THE STAGE' Stripe Polo T-Shirt with HOPE front and HOPE ON THE STAGE back.",
-  },
+
 ];
 
 export const categories = ["ALL", "ARIRANG", "RUNSEOKJIN", "HOPE ON THE STAGE"];
