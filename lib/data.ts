@@ -77,8 +77,8 @@ export const products: Product[] = [
     name: "[ARIRANG] Zip-up Hoodie (Black)",
     // Weverse: USD$200.00 — Zip-up Hoodie (Black) — as shown in screenshot
     price: 200.00,
-    image: "/images/hoodie-black-front.jpg",
-    images: { front: "/images/hoodie-black-front.jpg", back: "/images/hoodie-black-back.jpg" },
+    image: "/images/products/arirang-zip-up-hoodie-black.jpg",
+    images: { front: "/images/products/arirang-zip-up-hoodie-black.jpg", back: "/images/products/arirang-zip-up-hoodie-black.jpg" },
     badges: ["EXCLUSIVE", "PRE-ORDER"],
     shipping: "Shipped from KR",
     category: "ARIRANG",
