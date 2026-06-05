@@ -32,9 +32,10 @@ export default function ProductPageClient({ id }: ProductPageClientProps) {
   const currentMainImage = mainImage || product.image;
   const thumbnails = [
     product.image,
+    product.images?.front,
     product.images?.back,
     product.images?.detail,
-  ].filter(Boolean) as string[];
+  ].filter((img, idx, self) => img && self.indexOf(img) === idx) as string[];
 
   const isOutOfStock = product.stock === 0;
   const hasMemberVariants = product.memberVariants && product.memberVariants.length > 0;

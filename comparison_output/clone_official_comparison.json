@@ -1,0 +1,600 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "[ARIRANG] S/S T-Shirt (Charcoal)",
+      "category": "ARIRANG",
+      "price": 42.21,
+      "image": "/images/products/refined/arirang-tshirt-charcoal-front.webp",
+      "stock": 100,
+      "description": "Official BTS WORLD TOUR [ARIRANG] S/S T-Shirt in Charcoal. Global Exclusive pre-order item.",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "official_name": "[GLOBAL EXCLUSIVE] S/S T-Shirt (Charcoal)",
+      "official_price": 42.21,
+      "official_status": "SOLD OUT",
+      "official_badges": [
+        "EXCLUSIVE",
+        "PRE-ORDER"
+      ],
+      "official_shipping": "KR",
+      "official_url": "https://shop.weverse.io/en/shop/USD/artists/2/sales/56495",
+      "official_image_url": "https://cdn-contents.weverseshop.io/public/shop/b188548990ebe6f5cd849a38d7cdbf3a.png?w=720&q=95",
+      "official_material": "100% COTTON",
+      "official_sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "official_contents": "1EA",
+      "local_image_exists": true,
+      "official_image_file": "/home/ubuntu/fix-bts-weverse-shop/comparison_output/official_images/GLOBAL_EXCLUSIVE_S_S_T_Shirt_Charcoal.png",
+      "image_hash_distance": 0
+    },
+    {
+      "id": 2,
+      "name": "[ARIRANG] S/S Photo T-Shirt (Black)",
+      "category": "ARIRANG",
+      "price": 42.21,
+      "image": "/images/products/refined/arirang-photo-tshirt-black-front.jpg",
+      "stock": 80,
+      "description": "Official BTS WORLD TOUR [ARIRANG] S/S Photo T-Shirt in Black with BTS group photo graphic.",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "official_name": "S/S Photo T-Shirt (Black)",
+      "official_price": 42.21,
+      "official_status": "SOLD OUT",
+      "official_badges": [
+        "EXCLUSIVE",
+        "PRE-ORDER"
+      ],
+      "official_shipping": "KR",
+      "official_url": "https://shop.weverse.io/en/shop/USD/artists/2/sales/56496",
+      "official_image_url": "https://cdn-contents.weverseshop.io/public/shop/c0dc9df9e265bedd7b1dffaf3f9ed46f.png?w=720&q=95",
+      "official_material": "100% COTTON",
+      "official_sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "official_contents": "1EA",
+      "local_image_exists": true,
+      "official_image_file": "/home/ubuntu/fix-bts-weverse-shop/comparison_output/official_images/S_S_Photo_T_Shirt_Black.png",
+      "image_hash_distance": 16
+    },
+    {
+      "id": 3,
+      "name": "[ARIRANG] S/S Tour T-Shirt (Black)",
+      "category": "ARIRANG",
+      "price": 46.5,
+      "image": "/images/products/refined/arirang-tour-tshirt-black-front.png",
+      "stock": 0,
+      "description": "Official BTS WORLD TOUR [ARIRANG] S/S Tour T-Shirt in Black with tour city list on back.",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "official_name": "S/S Tour T-Shirt (Black)",
+      "official_price": 46.5,
+      "official_status": "SOLD OUT",
+      "official_badges": [
+        "EXCLUSIVE",
+        "PRE-ORDER"
+      ],
+      "official_shipping": "KR",
+      "official_url": "https://shop.weverse.io/en/shop/USD/artists/2/sales/56493",
+      "official_image_url": "https://cdn-contents.weverseshop.io/public/shop/d4e21317f071fb1130c6ca50e8cb1a03.png?w=720&q=95",
+      "official_material": "43% COTTON 42% NYLON 15% SPANDEX",
+      "official_sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "official_contents": "1EA",
+      "local_image_exists": true,
+      "official_image_file": "/home/ubuntu/fix-bts-weverse-shop/comparison_output/official_images/S_S_Tour_T_Shirt_Black.png",
+      "image_hash_distance": 0
+    },
+    {
+      "id": 4,
+      "name": "[ARIRANG] S/S Crop T-Shirt (White)",
+      "category": "ARIRANG",
+      "price": 35.05,
+      "image": "/images/crop-tshirt-white-front.jpg",
+      "stock": 60,
+      "description": "Official BTS WORLD TOUR [ARIRANG] S/S Crop T-Shirt in White. Global Exclusive pre-order item.",
+      "sizes": [
+        "S",
+        "M",
+        "L"
+      ],
+      "official_name": "[GLOBAL EXCLUSIVE] S/S Crop T-Shirt (White)",
+      "official_price": 35.05,
+      "official_status": "SOLD OUT",
+      "official_badges": [
+        "EXCLUSIVE",
+        "PRE-ORDER"
+      ],
+      "official_shipping": "KR",
+      "official_url": "https://shop.weverse.io/en/shop/USD/artists/2/sales/56497",
+      "official_image_url": "https://cdn-contents.weverseshop.io/public/shop/face7e8b1b40c60e84fd26c1916a9ca5.png?w=720&q=95",
+      "official_material": "100% COTTON",
+      "official_sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "official_contents": "1EA",
+      "local_image_exists": true,
+      "official_image_file": "/home/ubuntu/fix-bts-weverse-shop/comparison_output/official_images/GLOBAL_EXCLUSIVE_S_S_Crop_T_Shirt_White.png",
+      "image_hash_distance": 13
+    },
+    {
+      "id": 5,
+      "name": "[ARIRANG] Zip-up Hoodie (Charcoal)",
+      "category": "ARIRANG",
+      "price": 120.91,
+      "image": "/images/products/refined/arirang-zip-up-hoodie-charcoal.jpg",
+      "stock": 0,
+      "description": "Official BTS WORLD TOUR [ARIRANG] Zip-up Hoodie in Charcoal. Features a vintage distressed finish with custom embroidery and a relaxed fit.",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "official_name": "Zip-up Hoodie (Charcoal)",
+      "official_price": 120.91,
+      "official_status": "SOLD OUT",
+      "official_badges": [
+        "EXCLUSIVE",
+        "PRE-ORDER"
+      ],
+      "official_shipping": "KR",
+      "official_url": "https://shop.weverse.io/en/shop/USD/artists/2/sales/56490",
+      "official_image_url": "https://cdn-contents.weverseshop.io/public/shop/0203c04c20d2ce86a992ea5c9e5f10ce.png?w=720&q=95",
+      "official_material": "100% COTTON",
+      "official_sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "official_contents": "1EA",
+      "local_image_exists": true,
+      "official_image_file": "/home/ubuntu/fix-bts-weverse-shop/comparison_output/official_images/Zip_up_Hoodie_Charcoal.png",
+      "image_hash_distance": 8
+    },
+    {
+      "id": 18,
+      "name": "[ARIRANG] Zip-up Hoodie (Black)",
+      "category": "ARIRANG",
+      "price": 200.0,
+      "image": "/images/products/arirang-zip-up-hoodie-black.jpg",
+      "stock": 40,
+      "description": "Official BTS WORLD TOUR [ARIRANG] Zip-up Hoodie in Black. Features the iconic \\\"ARI ARI VEGAS RA NG\\\" graphic print on the front with star detail along the hood.",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "official_match": null,
+      "local_image_exists": true
+    },
+    {
+      "id": 6,
+      "name": "[ARIRANG] Hoodie & Pants Set-up (Gray)",
+      "category": "ARIRANG",
+      "price": 178.15,
+      "image": "/images/hoodie-gray-arirang-front.jpg",
+      "stock": 50,
+      "description": "Official BTS WORLD TOUR [ARIRANG] Hoodie & Pants Set-up in Gray. Complete set includes matching hoodie and sweatpants.",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "official_name": "Hoodie & Pants Set-up (Gray)",
+      "official_price": 178.15,
+      "official_status": "SOLD OUT",
+      "official_badges": [
+        "EXCLUSIVE",
+        "PRE-ORDER"
+      ],
+      "official_shipping": "KR",
+      "official_url": "https://shop.weverse.io/en/shop/USD/artists/2/sales/56492",
+      "official_image_url": "https://cdn-contents.weverseshop.io/public/shop/6e59ac4b91c008795edbcc57bb770f17.png?w=720&q=95",
+      "official_material": "100% COTTON",
+      "official_sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "official_contents": "Top 1EA, Bottom 1EA",
+      "local_image_exists": true,
+      "official_image_file": "/home/ubuntu/fix-bts-weverse-shop/comparison_output/official_images/Hoodie_Pants_Set_up_Gray.png",
+      "image_hash_distance": 13
+    },
+    {
+      "id": 7,
+      "name": "[ARIRANG] Wind Jacket (Gray)",
+      "category": "ARIRANG",
+      "price": 92.29,
+      "image": "/images/wind-jacket-gray-front.jpg",
+      "stock": 30,
+      "description": "Official BTS WORLD TOUR [ARIRANG] Wind Jacket in Gray with ARIRANG WORLD TOUR back print.",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "official_name": "Wind Jacket (Gray)",
+      "official_price": 92.29,
+      "official_status": "SOLD OUT",
+      "official_badges": [
+        "EXCLUSIVE",
+        "PRE-ORDER"
+      ],
+      "official_shipping": "KR",
+      "official_url": "https://shop.weverse.io/en/shop/USD/artists/2/sales/56491",
+      "official_image_url": "https://cdn-contents.weverseshop.io/public/shop/d5d24099965f65d1516ec6f2fc518076.png?w=720&q=95",
+      "official_material": "100% POLYESTER",
+      "official_sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "official_contents": "1EA",
+      "local_image_exists": true,
+      "official_image_file": "/home/ubuntu/fix-bts-weverse-shop/comparison_output/official_images/Wind_Jacket_Gray.png",
+      "image_hash_distance": 6
+    },
+    {
+      "id": 8,
+      "name": "[ARIRANG] Knit Cardigan (Beige)",
+      "category": "ARIRANG",
+      "price": 135.22,
+      "image": "/images/products/refined/arirang-knit-cardigan-beige-front-new.jpg",
+      "stock": 25,
+      "description": "Official BTS WORLD TOUR [ARIRANG] Knit Cardigan in Beige with logo and character back.",
+      "sizes": [
+        "S",
+        "M",
+        "L"
+      ],
+      "official_match": null,
+      "local_image_exists": true
+    },
+    {
+      "id": 13,
+      "name": "[ARIRANG] S/S Jersey",
+      "category": "ARIRANG",
+      "price": 60.81,
+      "image": "/images/jersey-generic-front.jpg",
+      "stock": 100,
+      "description": "Official ARIRANG camo baseball jersey. Available in all 7 member variants: RM 94, JIN 92, SUGA 93, J-HOPE 94, JIMIN 95, V 95, JUNGKOOK 97.",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "official_name": "S/S Jersey",
+      "official_price": 60.81,
+      "official_status": "SOLD OUT",
+      "official_badges": [
+        "EXCLUSIVE",
+        "PRE-ORDER"
+      ],
+      "official_shipping": "KR",
+      "official_url": "https://shop.weverse.io/en/shop/USD/artists/2/sales/56498",
+      "official_image_url": "https://cdn-contents.weverseshop.io/public/shop/3a7c910e1cd03402022b7029c66d7d7d.png?w=720&q=95",
+      "official_material": "100% POLYESTER",
+      "official_sizes": [
+        "M(S-M)",
+        "XL(L-XL)"
+      ],
+      "official_contents": "1EA",
+      "local_image_exists": true,
+      "official_image_file": "/home/ubuntu/fix-bts-weverse-shop/comparison_output/official_images/S_S_Jersey.png",
+      "image_hash_distance": 18
+    },
+    {
+      "id": 9,
+      "name": "[RUN SEOKJIN] EP.TOUR S/S T-Shirt (Encore Ver.)",
+      "category": "RUNSEOKJIN",
+      "price": 35.05,
+      "image": "/images/products/refined/run-seokjin-tshirt-encore-front.png",
+      "stock": 70,
+      "description": "Official #RUNSEOKJIN EP.TOUR S/S T-Shirt (Encore Ver.) with fish can graphic.",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "official_name": "S/S T-Shirt Encore Ver.",
+      "official_price": 35.05,
+      "official_status": "SOLD OUT",
+      "official_badges": [
+        "EXCLUSIVE"
+      ],
+      "official_shipping": "KR",
+      "official_url": "https://shop.weverse.io/en/shop/USD/artists/2/sales/51280",
+      "official_image_url": "https://cdn-contents.weverseshop.io/public/shop/ac777b3e65d4e6a56283523f7fe9a697.png?w=720&q=95",
+      "official_material": null,
+      "official_sizes": null,
+      "official_contents": null,
+      "local_image_exists": true,
+      "official_image_file": "/home/ubuntu/fix-bts-weverse-shop/comparison_output/official_images/S_S_T_Shirt_Encore_Ver.png",
+      "image_hash_distance": 0
+    },
+    {
+      "id": 10,
+      "name": "[RUN SEOKJIN] EP.TOUR L/S T-Shirt (Encore Ver.)",
+      "category": "RUNSEOKJIN",
+      "price": 42.21,
+      "image": "/images/tshirt-ls-encore-front.jpg",
+      "stock": 40,
+      "description": "Official #RUNSEOKJIN EP.TOUR Long Sleeve T-Shirt (Encore Ver.) with STAY TUNED print.",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "official_name": "L/S T-Shirt Encore Ver.",
+      "official_price": 42.21,
+      "official_status": "SOLD OUT",
+      "official_badges": [
+        "EXCLUSIVE"
+      ],
+      "official_shipping": "KR",
+      "official_url": "https://shop.weverse.io/en/shop/USD/artists/2/sales/51282",
+      "official_image_url": "https://cdn-contents.weverseshop.io/public/shop/c0d9de670af92c87db8226e4222f217d.png?w=720&q=95",
+      "official_material": null,
+      "official_sizes": null,
+      "official_contents": null,
+      "local_image_exists": true,
+      "official_image_file": "/home/ubuntu/fix-bts-weverse-shop/comparison_output/official_images/L_S_T_Shirt_Encore_Ver.png",
+      "image_hash_distance": 8
+    },
+    {
+      "id": 11,
+      "name": "[RUN SEOKJIN] EP.TOUR Coach Jacket",
+      "category": "RUNSEOKJIN",
+      "price": 85.14,
+      "image": "/images/coach-jacket-front.jpg",
+      "stock": 20,
+      "description": "Official #RUNSEOKJIN EP.TOUR Coach Jacket with RUN SEOKJIN EP TOUR back print.",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "official_name": "Coach Jacket",
+      "official_price": 85.14,
+      "official_status": "SOLD OUT",
+      "official_badges": [
+        "EXCLUSIVE"
+      ],
+      "official_shipping": "KR",
+      "official_url": "https://shop.weverse.io/en/shop/USD/artists/2/sales/40893",
+      "official_image_url": "https://cdn-contents.weverseshop.io/public/shop/c75b079ada32c4e436d98c7d93026303.png?w=720&q=95",
+      "official_material": null,
+      "official_sizes": null,
+      "official_contents": null,
+      "local_image_exists": true,
+      "official_image_file": "/home/ubuntu/fix-bts-weverse-shop/comparison_output/official_images/Coach_Jacket.png",
+      "image_hash_distance": 14
+    },
+    {
+      "id": 12,
+      "name": "[RUN SEOKJIN] EP.TOUR Denim Jacket",
+      "category": "RUNSEOKJIN",
+      "price": 96.58,
+      "image": "/images/products/refined/run-seokjin-denim-jacket-front.png",
+      "stock": 15,
+      "description": "Official #RUNSEOKJIN EP.TOUR Denim Jacket. Limited edition exclusive item.",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "official_name": "Denim Jacket",
+      "official_price": 96.58,
+      "official_status": "SOLD OUT",
+      "official_badges": [
+        "EXCLUSIVE"
+      ],
+      "official_shipping": "KR",
+      "official_url": "https://shop.weverse.io/en/shop/USD/artists/2/sales/40898",
+      "official_image_url": "https://cdn-contents.weverseshop.io/public/shop/d67a78b996d97e4e85f932c2ed4bb217.png?w=720&q=95",
+      "official_material": null,
+      "official_sizes": null,
+      "official_contents": null,
+      "local_image_exists": true,
+      "official_image_file": "/home/ubuntu/fix-bts-weverse-shop/comparison_output/official_images/Denim_Jacket.png",
+      "image_hash_distance": 0
+    },
+    {
+      "id": 14,
+      "name": "[j-hope] HOPE ON THE STAGE S/S T-Shirt (White)",
+      "category": "HOPE ON THE STAGE",
+      "price": 35.05,
+      "image": "/images/stripe-polo-front.jpg",
+      "stock": 40,
+      "description": "Official j-hope Tour 'HOPE ON THE STAGE' S/S T-Shirt in White.",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "official_name": "S/S T-Shirt (White)",
+      "official_price": 35.05,
+      "official_status": "SOLD OUT",
+      "official_badges": [
+        "EXCLUSIVE"
+      ],
+      "official_shipping": "KR",
+      "official_url": "https://shop.weverse.io/en/shop/USD/artists/2/sales/35855",
+      "official_image_url": "https://cdn-contents.weverseshop.io/public/shop/511aad90395000dc596d6f09ad8a7691.png?w=720&q=95",
+      "official_material": "100% Cotton",
+      "official_sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "official_contents": "1EA",
+      "local_image_exists": true,
+      "official_image_file": "/home/ubuntu/fix-bts-weverse-shop/comparison_output/official_images/S_S_T_Shirt_White.png",
+      "image_hash_distance": 14
+    },
+    {
+      "id": 15,
+      "name": "[j-hope] HOPE ON THE STAGE Hoodie (Black)",
+      "category": "HOPE ON THE STAGE",
+      "price": 75.12,
+      "image": "/images/products/refined/hope-hoodie-black-front.png",
+      "stock": 35,
+      "description": "Official j-hope Tour 'HOPE ON THE STAGE' Hoodie in Black.",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "official_name": "Hoodie (Black)",
+      "official_price": 75.12,
+      "official_status": "SOLD OUT",
+      "official_badges": [
+        "EXCLUSIVE"
+      ],
+      "official_shipping": "KR",
+      "official_url": "https://shop.weverse.io/en/shop/USD/artists/2/sales/35854",
+      "official_image_url": "https://cdn-contents.weverseshop.io/public/shop/61d7ad0b05323b01fd831340dd02402c.png?w=720&q=95",
+      "official_material": "100% Cotton",
+      "official_sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "official_contents": "Hoodie 1EA + PHOTOCARD 1EA",
+      "local_image_exists": true,
+      "official_image_file": "/home/ubuntu/fix-bts-weverse-shop/comparison_output/official_images/Hoodie_Black.png",
+      "image_hash_distance": 0
+    }
+  ],
+  "official_absent_from_clone": [
+    {
+      "category": "ARIRANG",
+      "official_name": "S/S Tour T-Shirt (Gray)",
+      "price": 46.5,
+      "image_url": "https://cdn-contents.weverseshop.io/public/shop/4e368d41ecebe0a4864616c6129eb363.png?w=720&q=95"
+    },
+    {
+      "category": "ARIRANG",
+      "official_name": "BTS Official Light Stick Ver.4 Parts (Tour Korean Ver.)"
+    },
+    {
+      "category": "ARIRANG",
+      "official_name": "[BTS X Urban Sophistication] Souvenir Bottle"
+    },
+    {
+      "category": "ARIRANG",
+      "official_name": "Skateboard"
+    },
+    {
+      "category": "ARIRANG",
+      "official_name": "[GLOBAL EXCLUSIVE] Photo Slogan Muffler"
+    },
+    {
+      "category": "ARIRANG",
+      "official_name": "BTS Official Light Stick Ver.4 Parts (Tour Ver.)"
+    },
+    {
+      "category": "ARIRANG",
+      "official_name": "BTS Official Light Stick Bag"
+    },
+    {
+      "category": "ARIRANG",
+      "official_name": "Multi Strap"
+    },
+    {
+      "category": "ARIRANG",
+      "official_name": "Plush Keyring"
+    },
+    {
+      "category": "ARIRANG",
+      "official_name": "Ball Cap (Black)"
+    },
+    {
+      "category": "ARIRANG",
+      "official_name": "[GLOBAL EXCLUSIVE] Fabric Bag"
+    },
+    {
+      "category": "ARIRANG",
+      "official_name": "Mini Skateboard Keyring"
+    },
+    {
+      "category": "RUNSEOKJIN",
+      "official_name": "Tour Mini Charm Incheon"
+    },
+    {
+      "category": "RUNSEOKJIN",
+      "official_name": "Lucky Draw"
+    },
+    {
+      "category": "RUNSEOKJIN",
+      "official_name": "S/S T-Shirt Wootteo Ver."
+    },
+    {
+      "category": "RUNSEOKJIN",
+      "official_name": "Tour Mini Charm"
+    },
+    {
+      "category": "RUNSEOKJIN",
+      "official_name": "Back Pack"
+    },
+    {
+      "category": "RUNSEOKJIN",
+      "official_name": "Image Picket"
+    },
+    {
+      "category": "RUNSEOKJIN",
+      "official_name": "Fabric Poster"
+    },
+    {
+      "category": "RUNSEOKJIN",
+      "official_name": "Magnetic Card Holder Ver. 4"
+    }
+  ]
+}
