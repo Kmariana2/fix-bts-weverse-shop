@@ -182,7 +182,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             <img
               src={product.image}
               alt={product.name}
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+              className="w-full h-full object-contain p-4 transition-transform duration-300 group-hover:scale-105"
               draggable={false}
             />
             {/* Sold Out Overlay */}
@@ -220,7 +220,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               <img
                 src={product.images!.back!}
                 alt={`${product.name} - Back`}
-                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                className="w-full h-full object-contain p-4 transition-transform duration-300 group-hover:scale-105"
                 draggable={false}
               />
               {/* Back indicator */}

@@ -76,7 +76,7 @@ export default function ProductPageClient({ id }: ProductPageClientProps) {
           <img
             src={currentMainImage}
             alt={product.name}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-contain p-8"
           />
           {isOutOfStock && (
             <div className="absolute inset-0 bg-white/65 flex items-center justify-center z-10">
@@ -94,7 +94,7 @@ export default function ProductPageClient({ id }: ProductPageClientProps) {
                   currentMainImage === img ? "border-black" : "border-transparent"
                 }`}
               >
-                <img src={img} alt="" className="w-full h-full object-cover" />
+                <img src={img} alt="" className="w-full h-full object-contain p-1" />
               </button>
             ))}
           </div>
@@ -151,7 +151,7 @@ export default function ProductPageClient({ id }: ProductPageClientProps) {
                   <img
                     src={variant.image}
                     alt={`${variant.name} ${variant.number}`}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain p-2"
                   />
                   <div className="absolute bottom-0 left-0 right-0 bg-black/70 text-white text-[10px] font-medium py-1 text-center">
                     {variant.name} {variant.number}
