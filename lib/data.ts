@@ -10,7 +10,7 @@ export const products: Product[] = [
     image: "/images/products/refined/arirang-tshirt-charcoal-front.webp",
     images: { 
       front: "/images/products/refined/arirang-tshirt-charcoal-front.webp",
-      back: "/images/products/refined/arirang-tshirt-charcoal-back.jpg" 
+      back: "/images/products/refined/arirang-tshirt-charcoal-back-new.jpg" 
     },
     badges: ["EXCLUSIVE", "PRE-ORDER"],
     shipping: "Shipped from KR",
@@ -132,9 +132,10 @@ export const products: Product[] = [
     name: "[ARIRANG] Knit Cardigan (Beige)",
     // Not listed separately on Weverse Tour Merch page — price kept from original listing
     price: 135.22,
-    image: "/images/products/refined/arirang-knit-cardigan-beige-front.jpg",
+    image: "/images/products/refined/arirang-knit-cardigan-beige-front-new.jpg",
     images: { 
-      front: "/images/products/refined/arirang-knit-cardigan-beige-front.jpg",
+      front: "/images/products/refined/arirang-knit-cardigan-beige-front-new.jpg",
+      back: "/images/products/refined/arirang-knit-cardigan-beige-back.jpg",
       detail: "/images/products/refined/arirang-knit-cardigan-beige-detail.jpg" 
     },
     badges: ["EXCLUSIVE"],
@@ -219,7 +220,10 @@ export const products: Product[] = [
     // Weverse: USD$96.58 — Denim Jacket
     price: 96.58,
     image: "/images/products/refined/run-seokjin-denim-jacket-front.png",
-    images: { front: "/images/products/refined/run-seokjin-denim-jacket-front.png" },
+    images: { 
+      front: "/images/products/refined/run-seokjin-denim-jacket-front.png",
+      back: "/images/products/refined/run-seokjin-denim-jacket-back.jpg"
+    },
     badges: ["EXCLUSIVE"],
     shipping: "Shipped from KR",
     category: "RUNSEOKJIN",
@@ -248,7 +252,10 @@ export const products: Product[] = [
     // Weverse: USD$75.12 — Hoodie (Black)
     price: 75.12,
     image: "/images/products/refined/hope-hoodie-black-front.png",
-    images: { front: "/images/products/refined/hope-hoodie-black-front.png" },
+    images: { 
+      front: "/images/products/refined/hope-hoodie-black-front.png",
+      back: "/images/products/refined/hope-hoodie-black-back.jpg"
+    },
     badges: ["EXCLUSIVE"],
     shipping: "Shipped from KR",
     category: "HOPE ON THE STAGE",
