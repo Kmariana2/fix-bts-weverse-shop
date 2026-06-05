@@ -7,8 +7,11 @@ export const products: Product[] = [
     name: "[ARIRANG] S/S T-Shirt (Charcoal)",
     // Weverse: USD$42.21 — [GLOBAL EXCLUSIVE] S/S T-Shirt (Charcoal)
     price: 42.21,
-    image: "/images/tshirt-charcoal-front.jpg",
-    images: { front: "/images/tshirt-charcoal-front.jpg" },
+    image: "/images/products/refined/arirang-tshirt-charcoal-front.webp",
+    images: { 
+      front: "/images/products/refined/arirang-tshirt-charcoal-front.webp",
+      back: "/images/products/refined/arirang-tshirt-charcoal-back.jpg" 
+    },
     badges: ["EXCLUSIVE", "PRE-ORDER"],
     shipping: "Shipped from KR",
     category: "ARIRANG",
@@ -21,8 +24,8 @@ export const products: Product[] = [
     name: "[ARIRANG] S/S Photo T-Shirt (Black)",
     // Weverse: USD$42.21 — S/S Photo T-Shirt (Black)
     price: 42.21,
-    image: "/images/tshirt-photo-black-front.jpg",
-    images: { front: "/images/tshirt-photo-black-front.jpg", back: "/images/tshirt-photo-black-back.jpg" },
+    image: "/images/products/refined/arirang-photo-tshirt-black-front.jpg",
+    images: { front: "/images/products/refined/arirang-photo-tshirt-black-front.jpg" },
     badges: ["EXCLUSIVE", "PRE-ORDER"],
     shipping: "Shipped from KR",
     category: "ARIRANG",
@@ -35,8 +38,11 @@ export const products: Product[] = [
     name: "[ARIRANG] S/S Tour T-Shirt (Black)",
     // Weverse: USD$46.50 — S/S Tour T-Shirt (Black)
     price: 46.50,
-    image: "/images/tshirt-tour-black-front.jpg",
-    images: { front: "/images/tshirt-tour-black-front.jpg", back: "/images/tshirt-tour-black-back.jpg" },
+    image: "/images/products/refined/arirang-tour-tshirt-black-front.png",
+    images: { 
+      front: "/images/products/refined/arirang-tour-tshirt-black-front.png", 
+      back: "/images/products/refined/arirang-tour-tshirt-black-back.jpg" 
+    },
     badges: ["EXCLUSIVE", "PRE-ORDER"],
     shipping: "Shipped from KR",
     category: "ARIRANG",
@@ -123,8 +129,11 @@ export const products: Product[] = [
     name: "[ARIRANG] Knit Cardigan (Beige)",
     // Not listed separately on Weverse Tour Merch page — price kept from original listing
     price: 135.22,
-    image: "/images/knit-cardigan-front.jpg",
-    images: { front: "/images/knit-cardigan-front.jpg", back: "/images/knit-cardigan-back.jpg" },
+    image: "/images/products/refined/arirang-knit-cardigan-beige-front.jpg",
+    images: { 
+      front: "/images/products/refined/arirang-knit-cardigan-beige-front.jpg",
+      detail: "/images/products/refined/arirang-knit-cardigan-beige-detail.jpg" 
+    },
     badges: ["EXCLUSIVE"],
     shipping: "Shipped from KR",
     category: "ARIRANG",
@@ -161,8 +170,11 @@ export const products: Product[] = [
     name: "[RUN SEOKJIN] EP.TOUR S/S T-Shirt (Encore Ver.)",
     // Weverse: USD$35.05 — S/S T-Shirt Encore Ver.
     price: 35.05,
-    image: "/images/tshirt-encore-blue-front.jpg",
-    images: { front: "/images/tshirt-encore-blue-front.jpg", back: "/images/tshirt-encore-blue-back.jpg" },
+    image: "/images/products/refined/run-seokjin-tshirt-encore-front.png",
+    images: { 
+      front: "/images/products/refined/run-seokjin-tshirt-encore-front.png", 
+      detail: "/images/products/refined/run-seokjin-tshirt-encore-detail.jpg" 
+    },
     badges: ["EXCLUSIVE"],
     shipping: "Shipped from KR",
     category: "RUNSEOKJIN",
@@ -203,8 +215,8 @@ export const products: Product[] = [
     name: "[RUN SEOKJIN] EP.TOUR Denim Jacket",
     // Weverse: USD$96.58 — Denim Jacket
     price: 96.58,
-    image: "/images/coach-jacket-front.jpg",
-    images: { front: "/images/coach-jacket-front.jpg", back: "/images/coach-jacket-back.jpg" },
+    image: "/images/products/refined/run-seokjin-denim-jacket-front.png",
+    images: { front: "/images/products/refined/run-seokjin-denim-jacket-front.png" },
     badges: ["EXCLUSIVE"],
     shipping: "Shipped from KR",
     category: "RUNSEOKJIN",
@@ -232,8 +244,8 @@ export const products: Product[] = [
     name: "[j-hope] HOPE ON THE STAGE Hoodie (Black)",
     // Weverse: USD$75.12 — Hoodie (Black)
     price: 75.12,
-    image: "/images/hoodie-black-front.jpg",
-    images: { front: "/images/hoodie-black-front.jpg", back: "/images/hoodie-black-back.jpg" },
+    image: "/images/products/refined/hope-hoodie-black-front.png",
+    images: { front: "/images/products/refined/hope-hoodie-black-front.png" },
     badges: ["EXCLUSIVE"],
     shipping: "Shipped from KR",
     category: "HOPE ON THE STAGE",
@@ -246,8 +258,11 @@ export const products: Product[] = [
     name: "[j-hope] HOPE ON THE STAGE Tour T-Shirt (Brown)",
     // Weverse: USD$35.05 — Tour T-Shirt (Brown)
     price: 35.05,
-    image: "/images/tshirt-red-hope-front.jpg",
-    images: { front: "/images/tshirt-red-hope-front.jpg", back: "/images/tshirt-red-hope-back.jpg" },
+    image: "/images/products/refined/hope-tour-tshirt-brown-front.jpg",
+    images: { 
+      front: "/images/products/refined/hope-tour-tshirt-brown-front.jpg", 
+      detail: "/images/products/refined/hope-tour-tshirt-brown-detail.jpg" 
+    },
     badges: ["EXCLUSIVE"],
     shipping: "Shipped from KR",
     category: "HOPE ON THE STAGE",
@@ -260,8 +275,8 @@ export const products: Product[] = [
     name: "[j-hope] HOPE ON THE STAGE Stripe PK T-Shirt (Multi)",
     // Not listed on current Weverse page — original price kept
     price: 35.05,
-    image: "/images/tshirt-encore-blue-front.jpg",
-    images: { front: "/images/tshirt-encore-blue-front.jpg", back: "/images/tshirt-encore-blue-back.jpg" },
+    image: "/images/products/refined/hope-stripe-pk-tshirt-multi.png",
+    images: { front: "/images/products/refined/hope-stripe-pk-tshirt-multi.png" },
     badges: ["EXCLUSIVE"],
     shipping: "Shipped from KR",
     category: "HOPE ON THE STAGE",
