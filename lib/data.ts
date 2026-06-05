@@ -281,9 +281,9 @@ export const products: Product[] = [
     id: 20,
     name: "[ARIRANG] S/S T-Shirt (Jung Kook)",
     price: 69.00,
-    image: "/images/products/ss-tshirt-jungkook-front.png",
+    image: "/images/products/ss-tshirt-jhope-front.png",
     images: { 
-      front: "/images/products/ss-tshirt-jungkook-front.png",
+      front: "/images/products/ss-tshirt-jhope-front.png",
       back: "/images/products/ss-tshirt-jungkook-back.png"
     },
     badges: ["EXCLUSIVE", "PRE-ORDER"],
@@ -297,9 +297,9 @@ export const products: Product[] = [
     id: 21,
     name: "[ARIRANG] S/S T-Shirt (V)",
     price: 69.00,
-    image: "/images/products/ss-tshirt-v-front.png",
+    image: "/images/products/ss-tshirt-jin-front.png",
     images: { 
-      front: "/images/products/ss-tshirt-v-front.png",
+      front: "/images/products/ss-tshirt-jin-front.png",
       back: "/images/products/ss-tshirt-v-back.png"
     },
     badges: ["EXCLUSIVE", "PRE-ORDER"],
@@ -329,9 +329,9 @@ export const products: Product[] = [
     id: 23,
     name: "[ARIRANG] S/S T-Shirt (Jin)",
     price: 69.00,
-    image: "/images/products/ss-tshirt-jin-front.png",
+    image: "/images/products/ss-tshirt-rm-front.png",
     images: { 
-      front: "/images/products/ss-tshirt-jin-front.png",
+      front: "/images/products/ss-tshirt-rm-front.png",
       back: "/images/products/ss-tshirt-jin-back.png"
     },
     badges: ["EXCLUSIVE", "PRE-ORDER"],
@@ -345,9 +345,9 @@ export const products: Product[] = [
     id: 24,
     name: "[ARIRANG] S/S T-Shirt (RM)",
     price: 69.00,
-    image: "/images/products/ss-tshirt-rm-front.png",
+    image: "/images/products/ss-tshirt-v-front.png",
     images: { 
-      front: "/images/products/ss-tshirt-rm-front.png",
+      front: "/images/products/ss-tshirt-v-front.png",
       back: "/images/products/ss-tshirt-rm-back.png"
     },
     badges: ["EXCLUSIVE", "PRE-ORDER"],
@@ -361,8 +361,8 @@ export const products: Product[] = [
     id: 25,
     name: "[ARIRANG] S/S T-Shirt (j-hope)",
     price: 69.00,
-    image: "/images/products/ss-tshirt-jhope-front.png",
-    images: { front: "/images/products/ss-tshirt-jhope-front.png" },
+    image: "/images/products/ss-tshirt-jimin-front.png",
+    images: { front: "/images/products/ss-tshirt-jimin-front.png" },
     badges: ["EXCLUSIVE", "PRE-ORDER"],
     shipping: "Shipped from US",
     category: "ARIRANG",
@@ -385,6 +385,21 @@ export const products: Product[] = [
     stock: 100,
     sizes: ["S", "M", "L", "XL"],
     description: "Official BTS S/S T-Shirt (BTS). Exclusive pre-order item.",
+  },
+  {
+    id: 27,
+    name: "[ARIRANG] S/S T-Shirt (SUGA)",
+    price: 69.00,
+    image: "/images/products/ss-tshirt-jungkook-front.png",
+    images: { 
+      front: "/images/products/ss-tshirt-jungkook-front.png"
+    },
+    badges: ["EXCLUSIVE", "PRE-ORDER"],
+    shipping: "Shipped from US",
+    category: "ARIRANG",
+    stock: 100,
+    sizes: ["S", "M", "L", "XL"],
+    description: "Official BTS S/S T-Shirt (SUGA). Exclusive pre-order item.",
   },
 
 ];
