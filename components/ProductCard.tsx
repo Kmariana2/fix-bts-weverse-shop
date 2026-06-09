@@ -59,7 +59,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   // Touch/swipe handlers for swipe-to-flip
   const handleTouchStart = (e: React.TouchEvent) => {
-    if (!hasBackImage || product.stock === 0) return;
+    if (!hasBackImage) return;
     const touch = e.touches[0];
     setTouchStart({ x: touch.clientX, y: touch.clientY });
     setIsDragging(true);
@@ -108,7 +108,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   const [mouseStart, setMouseStart] = useState<{ x: number } | null>(null);
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    if (!hasBackImage || product.stock === 0) return;
+    if (!hasBackImage) return;
     setMouseStart({ x: e.clientX });
     setIsDragging(true);
   };
@@ -185,14 +185,16 @@ export default function ProductCard({ product }: ProductCardProps) {
               className="w-full h-full object-contain p-4 transition-transform duration-300 group-hover:scale-105"
               draggable={false}
             />
-            {/* Sold Out Overlay */}
-            {product.stock === 0 && (
-              <div className="absolute inset-0 bg-white/70 backdrop-blur-[2px] flex items-center justify-center z-10">
-                <span className="text-black font-bold text-lg tracking-widest">SOLD OUT</span>
+            {/* Stock indicator */}
+            {product.stock > 0 && product.stock <= 10 && (
+              <div className="absolute bottom-2 left-2 z-20">
+                <span className="bg-black/70 text-white text-[10px] font-semibold px-2 py-1 rounded-full">
+                  {product.stock} product(s)
+                </span>
               </div>
             )}
             {/* Flip indicator badge */}
-            {hasBackImage && product.stock > 0 && (
+            {hasBackImage && (
               <div className="absolute top-2 right-2 z-20">
                 <div className="bg-black/60 backdrop-blur-md text-white text-[10px] px-2 py-1 rounded-full flex items-center gap-1 animate-pulse">
                   <RotateCcw className="w-3 h-3" />
@@ -201,7 +203,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               </div>
             )}
             {/* Swipe hint animation overlay */}
-            {hasBackImage && product.stock > 0 && !isFlipped && (
+            {hasBackImage && !isFlipped && (
               <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-xl">
                 <div className="absolute top-1/2 left-0 right-0 -translate-y-1/2 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <div className="flex items-center gap-2 bg-black/50 backdrop-blur-sm text-white text-xs px-3 py-1.5 rounded-full">
@@ -252,7 +254,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         </button>
 
         {/* Flip Button */}
-        {hasBackImage && product.stock > 0 && (
+        {hasBackImage && (
           <button
             onClick={(e) => {
               e.preventDefault();

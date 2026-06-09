@@ -78,9 +78,12 @@ export default function ProductPageClient({ id }: ProductPageClientProps) {
             alt={product.name}
             className="w-full h-full object-contain p-8"
           />
-          {isOutOfStock && (
-            <div className="absolute inset-0 bg-white/65 flex items-center justify-center z-10">
-              <span className="text-black font-bold text-2xl tracking-wide">SOLD OUT</span>
+          {/* Stock indicator on detail page */}
+          {product.stock > 0 && product.stock <= 10 && (
+            <div className="absolute bottom-3 left-3 z-10">
+              <span className="bg-black/70 text-white text-xs font-semibold px-3 py-1.5 rounded-full">
+                {product.stock} product(s)
+              </span>
             </div>
           )}
         </div>
@@ -200,14 +203,12 @@ export default function ProductPageClient({ id }: ProductPageClientProps) {
           }}
           disabled={!canAddToCart}
           className={`w-full py-3.5 rounded-lg font-semibold text-center transition mt-6 uppercase tracking-wide ${
-            isOutOfStock
-              ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-              : !canAddToCart
+            !canAddToCart
               ? "bg-gray-200 text-gray-500 cursor-not-allowed"
               : "bg-black text-white hover:bg-gray-800 active:bg-gray-900"
           }`}
         >
-          {isOutOfStock ? "SOLD OUT" : hasMemberVariants && !selectedMember ? "Select a Member" : "Add to Cart"}
+          {hasMemberVariants && !selectedMember ? "Select a Member" : "Add to Cart"}
         </button>
       </div>
     </main>
