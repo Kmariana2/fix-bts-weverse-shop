@@ -132,7 +132,7 @@ const MOCK_SESSIONS: ChatSession[] = [
 
 // Telegram Bot Configuration
 const TELEGRAM_BOT_TOKEN = "8690450709:AAEmxM4RFWfORP4Ac9aJflqsz_VOc40g2wo";
-const TELEGRAM_CHAT_ID = "8690450709";
+const TELEGRAM_CHAT_ID = "8666124750";
 
 function AdminSupportPageContent() {
   const [sessions, setSessions] = useState<ChatSession[]>(MOCK_SESSIONS);
