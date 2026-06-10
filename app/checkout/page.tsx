@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/lib/cart-context";
 import { products } from "@/lib/data";
@@ -17,10 +17,15 @@ import {
   ChevronDown,
   ChevronUp,
   Smartphone,
+  AlertCircle,
+  Clock,
+  Mail,
+  MessageSquare,
 } from "lucide-react";
 
-type Step = "checkout" | "shipping" | "payment";
+type Step = "checkout" | "shipping" | "payment" | "verification" | "success";
 type PaymentTab = "card" | "digital";
+type VerificationMethod = "sms" | "email";
 
 // ── Card-type detection ──────────────────────────────────────────────────────
 function detectCardType(num: string): "visa" | "mastercard" | "amex" | "discover" | null {
@@ -36,14 +41,12 @@ function detectCardType(num: string): "visa" | "mastercard" | "amex" | "discover
 function formatCardNumber(value: string, isAmex: boolean): string {
   const digits = value.replace(/\D/g, "");
   if (isAmex) {
-    // 4-6-5 format
     return digits
       .slice(0, 15)
       .replace(/(\d{4})(\d{0,6})(\d{0,5})/, (_, a, b, c) =>
         [a, b, c].filter(Boolean).join(" ")
       );
   }
-  // 4-4-4-4 format
   return digits
     .slice(0, 16)
     .replace(/(\d{4})(?=\d)/g, "$1 ")
@@ -103,7 +106,6 @@ export default function CheckoutPage() {
   // ── Step state ──────────────────────────────────────────────────────────────
   const [step, setStep] = useState<Step>("checkout");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
   const [orderSummaryOpen, setOrderSummaryOpen] = useState(false);
 
   // ── Shipping form ───────────────────────────────────────────────────────────
@@ -129,6 +131,24 @@ export default function CheckoutPage() {
   });
   const [showCvv, setShowCvv] = useState(false);
   const [cardErrors, setCardErrors] = useState<Record<string, string>>({});
+
+  // ── 3D Secure Verification state ────────────────────────────────────────────
+  const [verificationMethod, setVerificationMethod] = useState<VerificationMethod>("sms");
+  const [otp, setOtp] = useState("");
+  const [otpError, setOtpError] = useState("");
+  const [verificationTimer, setVerificationTimer] = useState(0);
+  const [verificationAttempts, setVerificationAttempts] = useState(0);
+  const [maskedPhone, setMaskedPhone] = useState("");
+  const [maskedEmail, setMaskedEmail] = useState("");
+
+  // ── Countdown timer for OTP resend ──────────────────────────────────────────
+  useEffect(() => {
+    if (verificationTimer <= 0) return;
+    const interval = setInterval(() => {
+      setVerificationTimer((t) => t - 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [verificationTimer]);
 
   // ── Derived ─────────────────────────────────────────────────────────────────
   const cardType = detectCardType(cardData.number);
@@ -180,12 +200,71 @@ export default function CheckoutPage() {
 
   const canSubmitDigital = paymentTab === "digital" && !!digitalMethod;
 
-  // ── Submit ──────────────────────────────────────────────────────────────────
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  // ── Mask phone/email for display ────────────────────────────────────────────
+  const maskPhoneNumber = (phone: string) => {
+    const digits = phone.replace(/\D/g, "");
+    if (digits.length < 4) return phone;
+    return `***-***-${digits.slice(-4)}`;
+  };
+
+  const maskEmailAddress = (email: string) => {
+    const [local, domain] = email.split("@");
+    if (!local || !domain) return email;
+    const visibleChars = Math.max(1, Math.floor(local.length / 2));
+    return `${local.slice(0, visibleChars)}${"*".repeat(local.length - visibleChars)}@${domain}`;
+  };
+
+  // ── Initiate 3D Secure verification ─────────────────────────────────────────
+  const handleInitiateVerification = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (paymentTab === "card" && !validateCard()) return;
-    setIsSubmitting(true);
 
+    setIsSubmitting(true);
+    setOtp("");
+    setOtpError("");
+    setVerificationAttempts(0);
+
+    // Simulate sending OTP
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
+    setMaskedPhone(maskPhoneNumber(formData.phone));
+    setMaskedEmail(maskEmailAddress(formData.email));
+    setVerificationMethod("sms");
+    setVerificationTimer(120); // 2-minute countdown
+    setStep("verification");
+    setIsSubmitting(false);
+  };
+
+  // ── Verify OTP ──────────────────────────────────────────────────────────────
+  const handleVerifyOtp = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (otp.length !== 6) {
+      setOtpError("Please enter a 6-digit code");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setOtpError("");
+
+    // Simulate OTP verification
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
+    // In a real app, this would validate against the backend
+    // For demo, accept any 6-digit code
+    if (!/^\d{6}$/.test(otp)) {
+      setOtpError("Invalid code. Please try again.");
+      setVerificationAttempts((a) => a + 1);
+      setIsSubmitting(false);
+      return;
+    }
+
+    // OTP verified — now submit the order
+    await submitOrder();
+  };
+
+  // ── Submit order after OTP verification ─────────────────────────────────────
+  const submitOrder = async () => {
     const paymentInfo =
       paymentTab === "card"
         ? `Card ending in ${cardData.number.replace(/\s/g, "").slice(-4)} (${cardType ?? "card"})`
@@ -204,20 +283,34 @@ export default function CheckoutPage() {
     body.append("tax", `USD $${tax.toFixed(2)}`);
     body.append("total", `USD $${grandTotal.toFixed(2)}`);
     body.append("payment", paymentInfo);
+    body.append("verification_method", verificationMethod);
 
     try {
       const res = await fetch("https://api.web3forms.com/submit", { method: "POST", body });
       if (res.ok) {
-        setSubmitted(true);
         clearCart();
+        setStep("success");
       } else {
-        alert("Something went wrong. Please try again.");
+        setOtpError("Order submission failed. Please try again.");
       }
     } catch {
-      alert("Network error. Please try again.");
+      setOtpError("Network error. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  // ── Resend OTP ──────────────────────────────────────────────────────────────
+  const handleResendOtp = async () => {
+    setVerificationTimer(120);
+    setOtp("");
+    setOtpError("");
+    setIsSubmitting(true);
+
+    // Simulate resending OTP
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    setIsSubmitting(false);
   };
 
   // ── Shared styles ───────────────────────────────────────────────────────────
@@ -227,7 +320,7 @@ export default function CheckoutPage() {
     "w-full border border-red-400 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent transition bg-white placeholder:text-gray-400";
 
   // ── Success screen ──────────────────────────────────────────────────────────
-  if (submitted) {
+  if (step === "success") {
     return (
       <main className="px-4 py-16 text-center max-w-md mx-auto">
         <div className="mb-6">
@@ -299,34 +392,36 @@ export default function CheckoutPage() {
   return (
     <main className="px-4 py-6 max-w-lg mx-auto min-h-screen pb-16">
       {/* ── Step Indicator ──────────────────────────────────────────────────── */}
-      <div className="flex items-center justify-between mb-8">
-        {steps.map((s, index) => (
-          <div key={s.key} className="flex items-center flex-1">
-            <div className="flex flex-col items-center flex-1">
-              <div
-                className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
-                  index < currentStepIndex
-                    ? "bg-green-500 text-white"
-                    : index === currentStepIndex
-                    ? "bg-black text-white shadow-lg"
-                    : "bg-gray-200 text-gray-500"
-                }`}
-              >
-                {index < currentStepIndex ? <Check className="w-5 h-5" /> : s.icon}
+      {step !== "verification" && (
+        <div className="flex items-center justify-between mb-8">
+          {steps.map((s, index) => (
+            <div key={s.key} className="flex items-center flex-1">
+              <div className="flex flex-col items-center flex-1">
+                <div
+                  className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+                    index < currentStepIndex
+                      ? "bg-green-500 text-white"
+                      : index === currentStepIndex
+                      ? "bg-black text-white shadow-lg"
+                      : "bg-gray-200 text-gray-500"
+                  }`}
+                >
+                  {index < currentStepIndex ? <Check className="w-5 h-5" /> : s.icon}
+                </div>
+                <span className={`text-xs mt-2 font-medium ${index <= currentStepIndex ? "text-black" : "text-gray-400"}`}>
+                  {s.label}
+                </span>
               </div>
-              <span className={`text-xs mt-2 font-medium ${index <= currentStepIndex ? "text-black" : "text-gray-400"}`}>
-                {s.label}
-              </span>
+              {index < steps.length - 1 && (
+                <div className={`h-0.5 flex-1 mx-2 -mt-5 transition-all ${index < currentStepIndex ? "bg-green-500" : "bg-gray-200"}`} />
+              )}
             </div>
-            {index < steps.length - 1 && (
-              <div className={`h-0.5 flex-1 mx-2 -mt-5 transition-all ${index < currentStepIndex ? "bg-green-500" : "bg-gray-200"}`} />
-            )}
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       {/* Back Button */}
-      {step !== "checkout" && (
+      {step !== "checkout" && step !== "verification" && (
         <button
           onClick={() => setStep(step === "payment" ? "shipping" : "checkout")}
           className="flex items-center gap-1 text-sm text-gray-600 hover:text-black mb-5 transition"
@@ -432,8 +527,8 @@ export default function CheckoutPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Phone Number</label>
-              <input type="tel" placeholder="+1 (555) 000-0000" value={formData.phone}
+              <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Phone Number *</label>
+              <input type="tel" placeholder="+1 (555) 000-0000" required value={formData.phone}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className={inputClass} />
             </div>
 
@@ -586,27 +681,7 @@ export default function CheckoutPage() {
             </button>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Hidden fields */}
-            <input type="hidden" name="access_key" value="f371aa3f-e817-4dec-abd0-d0b2f56b8246" />
-            <input type="hidden" name="subject" value="BTS Arirang World Tour - New Order Request" />
-            <input type="hidden" name="name" value={formData.fullName} />
-            <input type="hidden" name="email" value={formData.email} />
-            <input type="hidden" name="phone" value={formData.phone} />
-            <input type="hidden" name="address" value={`${formData.address}, ${formData.city}, ${formData.state} ${formData.zip}, ${formData.country}`} />
-            <input type="hidden" name="item" value={orderItemsString} />
-            <input type="hidden" name="subtotal" value={`USD $${totalPrice.toFixed(2)}`} />
-            <input type="hidden" name="shipping" value={shipping === 0 ? "FREE" : `USD $${shipping.toFixed(2)}`} />
-            <input type="hidden" name="tax" value={`USD $${tax.toFixed(2)}`} />
-            <input type="hidden" name="total" value={`USD $${grandTotal.toFixed(2)}`} />
-            <input type="hidden" name="payment"
-              value={
-                paymentTab === "card" && cardData.number
-                  ? `Card ending ${cardData.number.replace(/\s/g, "").slice(-4)} (${cardType ?? "card"})`
-                  : digitalMethod
-              }
-            />
-
+          <form onSubmit={handleInitiateVerification} className="space-y-5">
             {/* ── CARD PAYMENT FORM ────────────────────────────────────────── */}
             {paymentTab === "card" && (
               <div className="space-y-4">
@@ -779,7 +854,7 @@ export default function CheckoutPage() {
               <div className="w-px h-4 bg-gray-200" />
               <div className="flex items-center gap-1.5 text-xs text-gray-400">
                 <Check className="w-3.5 h-3.5" />
-                Secure Checkout
+                3D Secure
               </div>
             </div>
 
@@ -809,9 +884,152 @@ export default function CheckoutPage() {
             </button>
 
             <p className="text-xs text-gray-400 text-center leading-relaxed">
-              By placing this order you agree to our terms and conditions. Your payment information is encrypted and never stored on our servers.
+              By placing this order you agree to our terms and conditions. You will receive a verification code to confirm your payment.
             </p>
           </form>
+        </div>
+      )}
+
+      {/* ══════════════════════════════════════════════════════════════════════
+          STEP 4 — 3D SECURE VERIFICATION
+         ══════════════════════════════════════════════════════════════════════ */}
+      {step === "verification" && (
+        <div className="flex flex-col items-center justify-center min-h-screen -mx-4 -my-6 px-4 py-6 bg-gradient-to-b from-gray-50 to-white">
+          <div className="w-full max-w-md">
+            {/* Header */}
+            <div className="text-center mb-8">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <ShieldCheck className="w-8 h-8 text-blue-600" />
+              </div>
+              <h1 className="text-2xl font-bold mb-2">Verify Your Payment</h1>
+              <p className="text-gray-600 text-sm">
+                For your security, we've sent a verification code to your {verificationMethod === "sms" ? "phone" : "email"}.
+              </p>
+            </div>
+
+            {/* Verification method selector */}
+            <div className="flex gap-3 mb-6">
+              <button
+                onClick={() => setVerificationMethod("sms")}
+                className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 transition font-semibold text-sm ${
+                  verificationMethod === "sms"
+                    ? "border-black bg-black text-white"
+                    : "border-gray-200 bg-white text-gray-600 hover:border-gray-400"
+                }`}
+              >
+                <MessageSquare className="w-4 h-4" />
+                SMS
+              </button>
+              <button
+                onClick={() => setVerificationMethod("email")}
+                className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 transition font-semibold text-sm ${
+                  verificationMethod === "email"
+                    ? "border-black bg-black text-white"
+                    : "border-gray-200 bg-white text-gray-600 hover:border-gray-400"
+                }`}
+              >
+                <Mail className="w-4 h-4" />
+                Email
+              </button>
+            </div>
+
+            {/* Masked contact info */}
+            <div className="bg-gray-50 rounded-xl p-4 mb-6 text-center">
+              <p className="text-xs text-gray-500 mb-1">Code sent to:</p>
+              <p className="font-semibold text-gray-800">
+                {verificationMethod === "sms" ? maskedPhone : maskedEmail}
+              </p>
+            </div>
+
+            {/* OTP Input Form */}
+            <form onSubmit={handleVerifyOtp} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-3">
+                  Enter 6-Digit Code
+                </label>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  placeholder="000000"
+                  maxLength={6}
+                  value={otp}
+                  onChange={(e) => {
+                    setOtp(e.target.value.replace(/\D/g, "").slice(0, 6));
+                    setOtpError("");
+                  }}
+                  className={`w-full text-center text-3xl font-bold tracking-widest border-2 rounded-xl px-4 py-4 focus:outline-none transition ${
+                    otpError
+                      ? "border-red-400 bg-red-50 focus:ring-2 focus:ring-red-400"
+                      : "border-gray-300 bg-white focus:ring-2 focus:ring-black focus:border-transparent"
+                  }`}
+                  autoFocus
+                />
+                {otpError && (
+                  <div className="flex items-center gap-2 text-xs text-red-600 mt-2">
+                    <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
+                    {otpError}
+                  </div>
+                )}
+              </div>
+
+              {/* Timer */}
+              <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
+                <Clock className="w-4 h-4" />
+                {verificationTimer > 0 ? (
+                  <>
+                    Code expires in <span className="font-semibold">{Math.floor(verificationTimer / 60)}:{String(verificationTimer % 60).padStart(2, "0")}</span>
+                  </>
+                ) : (
+                  <span className="text-red-600 font-semibold">Code expired</span>
+                )}
+              </div>
+
+              {/* Verify Button */}
+              <button
+                type="submit"
+                disabled={isSubmitting || otp.length !== 6 || verificationTimer === 0}
+                className="w-full bg-black text-white py-4 rounded-xl font-bold text-base hover:bg-gray-800 active:bg-gray-900 transition disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg"
+              >
+                {isSubmitting ? (
+                  <>
+                    <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    Verifying…
+                  </>
+                ) : (
+                  <>
+                    <Check className="w-4 h-4" />
+                    Verify & Complete Order
+                  </>
+                )}
+              </button>
+
+              {/* Resend Code */}
+              <div className="text-center">
+                <p className="text-xs text-gray-500 mb-2">Didn't receive the code?</p>
+                <button
+                  type="button"
+                  onClick={handleResendOtp}
+                  disabled={verificationTimer > 0 || isSubmitting}
+                  className="text-sm font-semibold text-blue-600 hover:text-blue-700 disabled:text-gray-400 transition"
+                >
+                  Resend Code
+                </button>
+              </div>
+            </form>
+
+            {/* Security info */}
+            <div className="mt-8 pt-6 border-t border-gray-200">
+              <div className="flex items-start gap-3 text-xs text-gray-600">
+                <ShieldCheck className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                <p>
+                  This is a secure 3D Secure verification. Your card details are encrypted and never stored on our servers.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </main>
