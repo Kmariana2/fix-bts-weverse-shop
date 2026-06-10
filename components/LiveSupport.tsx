@@ -35,6 +35,10 @@ const BOT_RESPONSES: Record<string, string> = {
   default: "Thanks for your message! I'm here to help. If you need more specific assistance, I can connect you with a live agent. Would that be helpful?",
 };
 
+// Telegram Bot Configuration
+const TELEGRAM_BOT_TOKEN = "8690450709:AAEmxM4RFWfORP4Ac9aJflqsz_VOc40g2wo";
+const TELEGRAM_CHAT_ID = "8666124750";
+
 export default function LiveSupport() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
@@ -126,6 +130,36 @@ export default function LiveSupport() {
 
       // Trigger notification to store owner
       const sessionId = `live-chat-${Date.now()}`;
+      const currentPage = typeof window !== "undefined" ? window.location.pathname : "/";
+      const deepLink = `${typeof window !== "undefined" ? window.location.origin : ""}/admin/support?sessionId=${sessionId}&autoOpen=true`;
+
+      // Send Telegram notification
+      const telegramMessage = `
+🆕 <b>New Support Request!</b>
+
+👤 <b>Customer</b> needs help
+💬 <b>Message:</b> "${text}"
+📍 <b>Page:</b> ${currentPage}
+
+<a href="${deepLink}">🔗 Reply Now →</a>
+      `;
+
+      try {
+        await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: TELEGRAM_CHAT_ID,
+            text: telegramMessage,
+            parse_mode: "HTML",
+            disable_web_page_preview: false,
+          }),
+        });
+      } catch (err) {
+        console.error("Telegram notification failed:", err);
+      }
+
+      // Also send via dispatcher for email and push
       const notificationPayload = {
         sessionId,
         userName: "Customer",
@@ -133,13 +167,14 @@ export default function LiveSupport() {
         userPhone: "+1 (555) 000-0000",
         message: text,
         cartValue: 0,
-        currentPage: typeof window !== "undefined" ? window.location.pathname : "/",
+        currentPage,
         timestamp: new Date(),
       };
 
-      // Send notifications (in production, use your actual config)
       await dispatchNotification(notificationPayload, {
         ownerEmail: "owner@example.com",
+        telegramBotToken: TELEGRAM_BOT_TOKEN,
+        telegramChatId: TELEGRAM_CHAT_ID,
         enablePushNotifications: true,
       }).catch((err) => console.error("Notification dispatch failed:", err));
 
