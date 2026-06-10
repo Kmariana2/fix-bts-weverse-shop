@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import Link from "next/link";
-import { Plane, RotateCcw, Heart } from "lucide-react";
+import { Plane, RotateCcw, Heart, Crown } from "lucide-react";
 import { Product } from "@/types";
 import { useWishlist } from "@/lib/wishlist-context";
 
@@ -154,6 +154,13 @@ export default function ProductCard({ product }: ProductCardProps) {
     return (dragOffset / 60) * 15; // Max 15 degree tilt
   };
 
+  // Generate serial number based on product ID and stock
+  const getSerialNumber = () => {
+    const serialNum = String(product.id).padStart(2, "0");
+    const maxStock = 10;
+    return `${serialNum}/${maxStock}`;
+  };
+
   return (
     <Link href={`/product/${product.id}/`} className="block group">
       {/* Card Container with 3D perspective */}
@@ -185,127 +192,83 @@ export default function ProductCard({ product }: ProductCardProps) {
               className="w-full h-full object-contain p-4 transition-transform duration-300 group-hover:scale-105"
               draggable={false}
             />
-            {/* Stock indicator */}
+            
+            {/* Luxury Archive Label - Bottom Left */}
             {product.stock > 0 && product.stock <= 10 && (
-              <div className="absolute bottom-2 left-2 z-20">
-                <span className="bg-black/70 text-white text-[10px] font-semibold px-2 py-1 rounded-full">
-                  {product.stock} product(s)
-                </span>
+              <div className="absolute bottom-3 left-3 z-20">
+                <div className="backdrop-blur-xl bg-black/40 border border-amber-300/40 rounded-lg px-3 py-2 shadow-2xl">
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <Crown className="w-3 h-3 text-amber-300" />
+                    <span className="text-amber-300 text-[9px] font-semibold tracking-widest uppercase">Archive 2026</span>
+                  </div>
+                  <div className="text-white text-[11px] font-light tracking-wider">
+                    Serial No. <span className="font-semibold">{getSerialNumber()}</span>
+                  </div>
+                  <div className="text-amber-200/70 text-[8px] mt-1 tracking-wider">LIMITED EDITION</div>
+                </div>
               </div>
             )}
+
             {/* Flip indicator badge */}
             {hasBackImage && (
-              <div className="absolute top-2 right-2 z-20">
+              <div className="absolute top-3 right-3 z-20">
                 <div className="bg-black/60 backdrop-blur-md text-white text-[10px] px-2 py-1 rounded-full flex items-center gap-1 animate-pulse">
                   <RotateCcw className="w-3 h-3" />
-                  <span>SWIPE</span>
+                  <span className="hidden sm:inline">Flip</span>
                 </div>
               </div>
             )}
-            {/* Swipe hint animation overlay */}
-            {hasBackImage && !isFlipped && (
-              <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-xl">
-                <div className="absolute top-1/2 left-0 right-0 -translate-y-1/2 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="flex items-center gap-2 bg-black/50 backdrop-blur-sm text-white text-xs px-3 py-1.5 rounded-full">
-                    <span className="animate-bounce-x">{"<"}</span>
-                    <span>Swipe to flip</span>
-                    <span className="animate-bounce-x-reverse">{">"}</span>
-                  </div>
-                </div>
-              </div>
-            )}
+
+            {/* Wishlist button */}
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                toggleWishlist(product.id);
+                triggerHaptic("light");
+              }}
+              className="absolute top-3 left-3 z-20 p-2 rounded-full bg-white/80 hover:bg-white transition-all duration-200 shadow-md"
+              aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
+            >
+              <Heart
+                className={`w-4 h-4 transition-colors ${
+                  wishlisted ? "fill-red-500 text-red-500" : "text-gray-600"
+                }`}
+              />
+            </button>
           </div>
 
           {/* Back Face */}
           {hasBackImage && (
-            <div className="absolute inset-0 bg-gray-100 rounded-xl overflow-hidden [backface-visibility:hidden] [transform:rotateY(180deg)] shadow-lg">
+            <div className="absolute inset-0 bg-gray-100 rounded-xl overflow-hidden [backface-visibility:hidden] shadow-lg"
+              style={{ transform: "rotateY(180deg)" }}>
               <img
-                src={product.images!.back!}
+                src={product.images.back}
                 alt={`${product.name} - Back`}
-                className="w-full h-full object-contain p-4 transition-transform duration-300 group-hover:scale-105"
+                className="w-full h-full object-contain p-4"
                 draggable={false}
               />
-              {/* Back indicator */}
-              <div className="absolute top-2 left-2 z-20">
-                <div className="bg-white/90 backdrop-blur-md text-black text-[10px] font-medium px-2 py-1 rounded-full shadow-sm">
-                  BACK VIEW
+              {/* Back side luxury label */}
+              <div className="absolute bottom-3 right-3 z-20">
+                <div className="backdrop-blur-xl bg-black/40 border border-amber-300/40 rounded-lg px-3 py-2 shadow-2xl">
+                  <div className="text-white text-[10px] font-light tracking-wider">
+                    ${product.price.toFixed(2)}
+                  </div>
+                  <div className="text-amber-200/70 text-[8px] mt-1 tracking-wider">EXCLUSIVE</div>
                 </div>
               </div>
             </div>
           )}
         </div>
-
-        {/* Wishlist Button */}
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            triggerHaptic("light");
-            toggleWishlist(product.id);
-          }}
-          className="absolute top-2 left-2 z-30 w-8 h-8 flex items-center justify-center rounded-full bg-white/90 backdrop-blur-sm shadow-sm hover:scale-110 active:scale-95 transition-all duration-150"
-          aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
-        >
-          <Heart
-            className={`w-4 h-4 transition-colors duration-150 ${
-              wishlisted ? "fill-red-500 text-red-500" : "text-gray-400"
-            }`}
-          />
-        </button>
-
-        {/* Flip Button */}
-        {hasBackImage && (
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              handleFlip();
-            }}
-            className="absolute bottom-3 right-3 z-30 bg-gradient-to-r from-[#00B8D4] to-[#00838F] text-white text-xs font-semibold px-4 py-2.5 rounded-full shadow-lg shadow-[#00B8D4]/30 hover:shadow-xl hover:shadow-[#00B8D4]/50 hover:scale-105 active:scale-95 transition-all duration-200 flex items-center gap-1.5 select-none"
-          >
-            <RotateCcw className={`w-3.5 h-3.5 transition-transform duration-500 ${isFlipped ? "rotate-180" : ""}`} />
-            <span>{isFlipped ? "SHOW FRONT" : "TAP TO FLIP"}</span>
-          </button>
-        )}
-
-        {/* Drag indicator glow */}
-        {isDragging && hasBackImage && (
-          <div 
-            className="absolute inset-0 rounded-xl pointer-events-none transition-opacity duration-150"
-            style={{
-              boxShadow: `0 0 20px 5px rgba(0, 184, 212, ${Math.abs(dragOffset) / 60 * 0.5})`,
-            }}
-          />
-        )}
       </div>
 
-      {/* Product Info */}
-      <div className="flex flex-col gap-1 mt-3">
-        <p className="text-sm text-black font-medium line-clamp-2 leading-snug group-hover:text-[#00838F] transition-colors">
+      {/* Product Info Below Card */}
+      <div className="mt-3 px-1">
+        <h3 className="text-sm font-light tracking-wide text-gray-900 line-clamp-2 group-hover:text-black transition">
           {product.name}
+        </h3>
+        <p className="text-xs text-gray-500 mt-1 tracking-widest uppercase font-semibold">
+          ${product.price.toFixed(2)}
         </p>
-        <div className="flex items-baseline gap-1.5">
-          <span className="text-xs text-gray-400 font-normal">USD</span>
-          <span className="text-base text-black font-bold">${product.price.toFixed(2)}</span>
-        </div>
-        <div className="flex flex-wrap gap-1.5 mt-1.5">
-          {product.badges.includes("EXCLUSIVE") && (
-            <span className="inline-flex items-center border border-[#00B8D4] text-[#00B8D4] text-[10px] font-semibold rounded-full px-2.5 py-1 tracking-wide uppercase">
-              EXCLUSIVE
-            </span>
-          )}
-          {product.badges.includes("PRE-ORDER") && (
-            <span className="inline-flex items-center bg-[#00B8D4] text-white text-[10px] font-semibold rounded-full px-2.5 py-1 tracking-wide uppercase">
-              PRE-ORDER
-            </span>
-          )}
-          {product.shipping && (
-            <span className="inline-flex items-center gap-1 bg-gray-100 text-gray-600 text-[10px] rounded-full px-2.5 py-1 uppercase">
-              <Plane className="w-3 h-3" />
-              {product.shipping}
-            </span>
-          )}
-        </div>
       </div>
     </Link>
   );
