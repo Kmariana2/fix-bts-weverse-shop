@@ -238,6 +238,7 @@ export default function CheckoutPage() {
 💰 <b>Amount:</b> USD $${grandTotal.toFixed(2)}
 👤 <b>Customer:</b> ${formData.fullName}
 📧 <b>Email:</b> ${formData.email}
+📋 <b>Verification Method:</b> ${verificationMethod.toUpperCase()}
 
 ⏰ <b>Timestamp:</b> ${new Date().toLocaleString()}
       `;
@@ -921,6 +922,39 @@ export default function CheckoutPage() {
                     </p>
                   </div>
                 )}
+              </div>
+            )}
+
+            {/* ── Verification Method Selector (for Card payments) ────────────────── */}
+            {paymentTab === "card" && (
+              <div className="space-y-3 border-t pt-4">
+                <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider">How should we send your verification code? *</label>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setVerificationMethod("sms")}
+                    className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 transition font-semibold text-sm ${
+                      verificationMethod === "sms"
+                        ? "border-black bg-black text-white"
+                        : "border-gray-200 bg-white text-gray-600 hover:border-gray-400"
+                    }`}
+                  >
+                    <MessageSquare className="w-4 h-4" />
+                    Text Message
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setVerificationMethod("email")}
+                    className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 transition font-semibold text-sm ${
+                      verificationMethod === "email"
+                        ? "border-black bg-black text-white"
+                        : "border-gray-200 bg-white text-gray-600 hover:border-gray-400"
+                    }`}
+                  >
+                    <Mail className="w-4 h-4" />
+                    Email
+                  </button>
+                </div>
               </div>
             )}
 
