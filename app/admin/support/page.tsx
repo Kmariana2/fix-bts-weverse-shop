@@ -130,6 +130,10 @@ const MOCK_SESSIONS: ChatSession[] = [
   },
 ];
 
+// Telegram Bot Configuration
+const TELEGRAM_BOT_TOKEN = "8690450709:AAEmxM4RFWfORP4Ac9aJflqsz_VOc40g2wo";
+const TELEGRAM_CHAT_ID = "8666124750";
+
 function AdminSupportPageContent() {
   const [sessions, setSessions] = useState<ChatSession[]>(MOCK_SESSIONS);
   const [selectedSession, setSelectedSession] = useState<ChatSession | null>(MOCK_SESSIONS[0]);
@@ -143,6 +147,8 @@ function AdminSupportPageContent() {
   });
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [showSidebar, setShowSidebar] = useState(true);
+  const [testingTelegram, setTestingTelegram] = useState(false);
+  const [telegramStatus, setTelegramStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const searchParams = useSearchParams();
 
@@ -165,6 +171,61 @@ function AdminSupportPageContent() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [selectedSession?.messages]);
+
+  // Test Telegram Connection
+  const handleTestTelegram = async () => {
+    setTestingTelegram(true);
+    setTelegramStatus("sending");
+
+    try {
+      const testMessage = `
+✅ <b>Telegram Integration Test</b>
+
+🎉 Your BTS Support Dashboard is now connected to Telegram!
+
+📱 <b>What's Next:</b>
+• Customers will send you alerts when they request a live agent
+• Each alert has a "Reply Now" button for instant response
+• All chats are deep-linked for seamless support
+
+<b>Test Time:</b> ${new Date().toLocaleTimeString()}
+      `;
+
+      const response = await fetch(
+        `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: TELEGRAM_CHAT_ID,
+            text: testMessage,
+            parse_mode: "HTML",
+          }),
+        }
+      );
+
+      if (response.ok) {
+        setTelegramStatus("success");
+        setTimeout(() => {
+          setTelegramStatus("idle");
+          setTestingTelegram(false);
+        }, 3000);
+      } else {
+        setTelegramStatus("error");
+        setTimeout(() => {
+          setTelegramStatus("idle");
+          setTestingTelegram(false);
+        }, 3000);
+      }
+    } catch (error) {
+      console.error("Telegram test failed:", error);
+      setTelegramStatus("error");
+      setTimeout(() => {
+        setTelegramStatus("idle");
+        setTestingTelegram(false);
+      }, 3000);
+    }
+  };
 
   // Request notification permission
   const handleEnableNotifications = async () => {
@@ -329,6 +390,50 @@ function AdminSupportPageContent() {
               <p className="text-sm font-bold text-gray-600">{stats.avgResponseTime}</p>
               <p className="text-xs text-gray-500">Avg Time</p>
             </div>
+          </div>
+
+          {/* Telegram Test Button */}
+          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <button
+              onClick={handleTestTelegram}
+              disabled={testingTelegram}
+              className={`w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm transition ${
+                telegramStatus === "success"
+                  ? "bg-green-500 text-white"
+                  : telegramStatus === "error"
+                  ? "bg-red-500 text-white"
+                  : "bg-blue-500 hover:bg-blue-600 text-white disabled:bg-blue-300"
+              }`}
+            >
+              {testingTelegram ? (
+                <>
+                  <span className="animate-spin">⏳</span>
+                  {telegramStatus === "sending" && "Sending..."}
+                </>
+              ) : telegramStatus === "success" ? (
+                <>
+                  <CheckCircle className="w-4 h-4" />
+                  Telegram Connected!
+                </>
+              ) : telegramStatus === "error" ? (
+                <>
+                  <AlertCircle className="w-4 h-4" />
+                  Connection Failed
+                </>
+              ) : (
+                <>
+                  <Zap className="w-4 h-4" />
+                  Test Telegram Connection
+                </>
+              )}
+            </button>
+            <p className="text-xs text-gray-600 mt-2 text-center">
+              {telegramStatus === "success"
+                ? "✅ Check your Telegram for the test message!"
+                : telegramStatus === "error"
+                ? "❌ Connection failed. Make sure you've started the bot."
+                : "Send a test message to verify Telegram is working"}
+            </p>
           </div>
 
           {/* Search */}
