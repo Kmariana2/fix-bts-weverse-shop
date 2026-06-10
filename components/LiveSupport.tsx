@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { MessageCircle, X, Send, Loader, User, Bot, Phone, Clock } from "lucide-react";
+import { dispatchNotification } from "@/lib/notification-dispatcher";
 
 interface Message {
   id: string;
@@ -122,6 +123,26 @@ export default function LiveSupport() {
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, connectedMsg]);
+
+      // Trigger notification to store owner
+      const sessionId = `live-chat-${Date.now()}`;
+      const notificationPayload = {
+        sessionId,
+        userName: "Customer",
+        userEmail: "customer@example.com",
+        userPhone: "+1 (555) 000-0000",
+        message: text,
+        cartValue: 0,
+        currentPage: typeof window !== "undefined" ? window.location.pathname : "/",
+        timestamp: new Date(),
+      };
+
+      // Send notifications (in production, use your actual config)
+      await dispatchNotification(notificationPayload, {
+        ownerEmail: "owner@example.com",
+        enablePushNotifications: true,
+      }).catch((err) => console.error("Notification dispatch failed:", err));
+
       return;
     }
 

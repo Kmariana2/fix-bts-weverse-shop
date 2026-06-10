@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   MessageCircle,
   Search,
@@ -129,7 +130,7 @@ const MOCK_SESSIONS: ChatSession[] = [
   },
 ];
 
-export default function AdminSupportPage() {
+function AdminSupportPageContent() {
   const [sessions, setSessions] = useState<ChatSession[]>(MOCK_SESSIONS);
   const [selectedSession, setSelectedSession] = useState<ChatSession | null>(MOCK_SESSIONS[0]);
   const [messageInput, setMessageInput] = useState("");
@@ -143,6 +144,22 @@ export default function AdminSupportPage() {
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [showSidebar, setShowSidebar] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const searchParams = useSearchParams();
+
+  // Handle deep-linking from notifications
+  useEffect(() => {
+    const sessionId = searchParams.get("sessionId");
+    const autoOpen = searchParams.get("autoOpen");
+    if (sessionId && autoOpen === "true") {
+      const session = sessions.find((s) => s.id === sessionId);
+      if (session) {
+        setSelectedSession(session);
+        setShowSidebar(false);
+        // Scroll to top to show the chat
+        window.scrollTo(0, 0);
+      }
+    }
+  }, [searchParams, sessions]);
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -246,7 +263,7 @@ export default function AdminSupportPage() {
   };
 
   return (
-    <div className="h-screen bg-gray-50 flex flex-col md:flex-row">
+    <div className="h-screen bg-gray-50 flex flex-col md:flex-row" suppressHydrationWarning>
       {/* Mobile Header */}
       <div className="md:hidden bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between sticky top-0 z-10">
         <button
@@ -534,5 +551,13 @@ export default function AdminSupportPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function AdminSupportPage() {
+  return (
+    <Suspense fallback={<div className="h-screen bg-gray-50 flex items-center justify-center">Loading...</div>}>
+      <AdminSupportPageContent />
+    </Suspense>
   );
 }
