@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   title: "BTS Arirang World Tour - Official Merch Restock",
   description: "Official BTS Arirang World Tour merchandise restock - Limited edition items for ARMY",
   metadataBase: new URL("https://brigit.work"),
+  manifest: "/manifest.json",
   openGraph: {
     title: "BTS Arirang World Tour - Official Merch Restock",
     description: "Official BTS Arirang World Tour merchandise restock - Limited edition items for ARMY",
@@ -23,7 +24,8 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  themeColor: "#00B8D4",
+  themeColor: "#000000",
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -32,7 +34,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="bg-white" data-scroll-behavior="smooth">
+    <html lang="en" className="bg-white" data-scroll-behavior="smooth" suppressHydrationWarning>
       <body className="font-sans antialiased">
         <CartProvider>
           <WishlistProvider>

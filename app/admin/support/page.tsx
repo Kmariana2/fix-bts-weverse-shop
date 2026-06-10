@@ -16,6 +16,9 @@ import {
   AlertCircle,
   Zap,
   TrendingUp,
+  Bell,
+  ChevronLeft,
+  Menu,
 } from "lucide-react";
 
 interface ChatSession {
@@ -137,12 +140,32 @@ export default function AdminSupportPage() {
     resolvedToday: 12,
     avgResponseTime: "2m 15s",
   });
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [selectedSession?.messages]);
+
+  // Request notification permission
+  const handleEnableNotifications = async () => {
+    if ("Notification" in window) {
+      if (Notification.permission === "granted") {
+        setNotificationsEnabled(true);
+      } else if (Notification.permission !== "denied") {
+        const permission = await Notification.requestPermission();
+        if (permission === "granted") {
+          setNotificationsEnabled(true);
+          new Notification("Support Notifications Enabled", {
+            body: "You'll now receive alerts for new support requests",
+            icon: "/favicon.ico",
+          });
+        }
+      }
+    }
+  };
 
   // Handle sending message
   const handleSendMessage = () => {
@@ -196,7 +219,6 @@ export default function AdminSupportPage() {
       prev ? { ...prev, status: "resolved" } : null
     );
 
-    // Auto-deselect after a moment
     setTimeout(() => {
       const nextWaiting = sessions.find((s) => s.status === "waiting");
       if (nextWaiting) setSelectedSession(nextWaiting);
@@ -224,60 +246,117 @@ export default function AdminSupportPage() {
   };
 
   return (
-    <div className="h-screen bg-gray-50 flex flex-col">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4 shadow-sm">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Support Dashboard</h1>
-            <p className="text-sm text-gray-500">Manage live chats and customer inquiries</p>
-          </div>
-          <div className="flex gap-4">
-            <div className="text-center">
-              <p className="text-2xl font-bold text-green-600">{stats.activeChats}</p>
-              <p className="text-xs text-gray-500">Active Chats</p>
-            </div>
-            <div className="w-px bg-gray-200" />
-            <div className="text-center">
-              <p className="text-2xl font-bold text-red-600">{stats.waitingChats}</p>
-              <p className="text-xs text-gray-500">Waiting</p>
-            </div>
-            <div className="w-px bg-gray-200" />
-            <div className="text-center">
-              <p className="text-2xl font-bold text-blue-600">{stats.resolvedToday}</p>
-              <p className="text-xs text-gray-500">Resolved Today</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Search */}
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Search by name or email..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-          />
-        </div>
+    <div className="h-screen bg-gray-50 flex flex-col md:flex-row">
+      {/* Mobile Header */}
+      <div className="md:hidden bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between sticky top-0 z-10">
+        <button
+          onClick={() => setShowSidebar(!showSidebar)}
+          className="p-2 hover:bg-gray-100 rounded-lg transition"
+        >
+          {showSidebar ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+        </button>
+        <h1 className="font-bold text-gray-900">Support</h1>
+        <button
+          onClick={handleEnableNotifications}
+          className={`p-2 rounded-lg transition ${
+            notificationsEnabled
+              ? "bg-green-100 text-green-600"
+              : "hover:bg-gray-100 text-gray-600"
+          }`}
+        >
+          <Bell className="w-5 h-5" />
+        </button>
       </div>
 
-      {/* Main Content */}
-      <div className="flex flex-1 overflow-hidden">
+      {/* Sidebar / Sessions List */}
+      <div
+        className={`${
+          showSidebar ? "flex" : "hidden"
+        } md:flex flex-col w-full md:w-96 border-r border-gray-200 bg-white overflow-hidden`}
+      >
+        {/* Desktop Header */}
+        <div className="hidden md:block border-b border-gray-200 px-6 py-4 shadow-sm">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">Support</h1>
+              <p className="text-sm text-gray-500">Manage live chats</p>
+            </div>
+            <button
+              onClick={handleEnableNotifications}
+              className={`p-2 rounded-lg transition ${
+                notificationsEnabled
+                  ? "bg-green-100 text-green-600"
+                  : "hover:bg-gray-100 text-gray-600"
+              }`}
+              title={notificationsEnabled ? "Notifications enabled" : "Enable notifications"}
+            >
+              <Bell className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Stats */}
+          <div className="grid grid-cols-4 gap-2 mb-4">
+            <div className="text-center">
+              <p className="text-lg font-bold text-green-600">{stats.activeChats}</p>
+              <p className="text-xs text-gray-500">Active</p>
+            </div>
+            <div className="text-center">
+              <p className="text-lg font-bold text-red-600">{stats.waitingChats}</p>
+              <p className="text-xs text-gray-500">Waiting</p>
+            </div>
+            <div className="text-center">
+              <p className="text-lg font-bold text-blue-600">{stats.resolvedToday}</p>
+              <p className="text-xs text-gray-500">Resolved</p>
+            </div>
+            <div className="text-center">
+              <p className="text-sm font-bold text-gray-600">{stats.avgResponseTime}</p>
+              <p className="text-xs text-gray-500">Avg Time</p>
+            </div>
+          </div>
+
+          {/* Search */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search by name..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+            />
+          </div>
+        </div>
+
+        {/* Mobile Search */}
+        <div className="md:hidden px-4 py-3 border-b border-gray-200">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+            />
+          </div>
+        </div>
+
         {/* Sessions List */}
-        <div className="w-96 border-r border-gray-200 bg-white overflow-y-auto">
+        <div className="flex-1 overflow-y-auto">
           <div className="divide-y divide-gray-200">
             {filteredSessions.length === 0 ? (
               <div className="p-8 text-center text-gray-500">
                 <MessageCircle className="w-12 h-12 mx-auto mb-3 opacity-30" />
-                <p>No sessions found</p>
+                <p className="text-sm">No sessions found</p>
               </div>
             ) : (
               filteredSessions.map((session) => (
                 <button
                   key={session.id}
-                  onClick={() => setSelectedSession(session)}
+                  onClick={() => {
+                    setSelectedSession(session);
+                    setShowSidebar(false);
+                  }}
                   className={`w-full text-left p-4 hover:bg-gray-50 transition border-l-4 ${
                     selectedSession?.id === session.id
                       ? "border-l-black bg-blue-50"
@@ -285,18 +364,18 @@ export default function AdminSupportPage() {
                   }`}
                 >
                   <div className="flex items-start justify-between mb-2">
-                    <div className="flex-1">
-                      <p className="font-semibold text-gray-900 text-sm">{session.userName}</p>
-                      <p className="text-xs text-gray-500">{session.userEmail}</p>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-gray-900 text-sm truncate">{session.userName}</p>
+                      <p className="text-xs text-gray-500 truncate">{session.userEmail}</p>
                     </div>
                     <span
-                      className={`px-2 py-1 rounded-full text-xs font-semibold border ${getStatusColor(
+                      className={`ml-2 px-2 py-1 rounded-full text-xs font-semibold border flex-shrink-0 whitespace-nowrap ${getStatusColor(
                         session.status
                       )}`}
                     >
-                      {session.status === "waiting" && "🔴 Waiting"}
-                      {session.status === "active" && "🟢 Active"}
-                      {session.status === "resolved" && "✓ Resolved"}
+                      {session.status === "waiting" && "🔴"}
+                      {session.status === "active" && "🟢"}
+                      {session.status === "resolved" && "✓"}
                     </span>
                   </div>
                   <p className="text-xs text-gray-600 line-clamp-2 mb-2">
@@ -307,7 +386,7 @@ export default function AdminSupportPage() {
                       <Clock className="w-3 h-3" />
                       {Math.floor(
                         (Date.now() - session.timestamp.getTime()) / 60000
-                      )}m ago
+                      )}m
                     </span>
                     {session.cartItems > 0 && (
                       <span className="flex items-center gap-1 text-blue-600 font-semibold">
@@ -321,19 +400,21 @@ export default function AdminSupportPage() {
             )}
           </div>
         </div>
+      </div>
 
-        {/* Chat View */}
+      {/* Chat View */}
+      <div className="flex-1 flex flex-col overflow-hidden">
         {selectedSession ? (
-          <div className="flex-1 flex flex-col bg-white">
+          <>
             {/* Chat Header */}
-            <div className="border-b border-gray-200 px-6 py-4 bg-gradient-to-r from-gray-50 to-white">
-              <div className="flex items-start justify-between mb-3">
-                <div>
-                  <h2 className="text-lg font-bold text-gray-900">{selectedSession.userName}</h2>
-                  <p className="text-sm text-gray-500">{selectedSession.userEmail}</p>
+            <div className="border-b border-gray-200 px-4 md:px-6 py-3 md:py-4 bg-gradient-to-r from-gray-50 to-white">
+              <div className="flex items-start justify-between mb-2 md:mb-3">
+                <div className="flex-1 min-w-0">
+                  <h2 className="text-base md:text-lg font-bold text-gray-900 truncate">{selectedSession.userName}</h2>
+                  <p className="text-xs md:text-sm text-gray-500 truncate">{selectedSession.userEmail}</p>
                 </div>
                 <span
-                  className={`px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(
+                  className={`ml-2 px-2 md:px-3 py-1 rounded-full text-xs font-semibold border flex-shrink-0 ${getStatusColor(
                     selectedSession.status
                   )}`}
                 >
@@ -344,41 +425,41 @@ export default function AdminSupportPage() {
               </div>
 
               {/* User Context */}
-              <div className="grid grid-cols-4 gap-3 text-xs">
-                <div className="flex items-center gap-2 text-gray-600">
-                  <Phone className="w-3.5 h-3.5 text-gray-400" />
-                  <span>{selectedSession.userPhone}</span>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
+                <div className="flex items-center gap-1 text-gray-600 truncate">
+                  <Phone className="w-3 h-3 flex-shrink-0 text-gray-400" />
+                  <span className="truncate">{selectedSession.userPhone}</span>
                 </div>
-                <div className="flex items-center gap-2 text-gray-600">
-                  <MapPin className="w-3.5 h-3.5 text-gray-400" />
+                <div className="flex items-center gap-1 text-gray-600 truncate">
+                  <MapPin className="w-3 h-3 flex-shrink-0 text-gray-400" />
                   <span className="truncate">{selectedSession.currentPage}</span>
                 </div>
-                <div className="flex items-center gap-2 text-gray-600">
-                  <ShoppingCart className="w-3.5 h-3.5 text-gray-400" />
+                <div className="flex items-center gap-1 text-gray-600">
+                  <ShoppingCart className="w-3 h-3 flex-shrink-0 text-gray-400" />
                   <span>{selectedSession.cartItems} items</span>
                 </div>
-                <div className="flex items-center gap-2 text-blue-600 font-semibold">
-                  <TrendingUp className="w-3.5 h-3.5" />
+                <div className="flex items-center gap-1 text-blue-600 font-semibold">
+                  <TrendingUp className="w-3 h-3 flex-shrink-0" />
                   <span>${selectedSession.cartValue.toFixed(2)}</span>
                 </div>
               </div>
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-50">
+            <div className="flex-1 overflow-y-auto p-3 md:p-6 space-y-3 md:space-y-4 bg-gray-50">
               {selectedSession.messages.map((msg) => (
                 <div
                   key={msg.id}
                   className={`flex ${msg.sender === "agent" ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    className={`max-w-md px-4 py-3 rounded-lg text-sm ${
+                    className={`max-w-xs md:max-w-md px-3 md:px-4 py-2 md:py-3 rounded-lg text-sm ${
                       msg.sender === "agent"
                         ? "bg-black text-white rounded-br-none"
                         : "bg-white text-gray-800 border border-gray-200 rounded-bl-none"
                     }`}
                   >
-                    <p>{msg.text}</p>
+                    <p className="break-words">{msg.text}</p>
                     <p
                       className={`text-xs mt-1 ${
                         msg.sender === "agent" ? "text-gray-300" : "text-gray-400"
@@ -397,35 +478,35 @@ export default function AdminSupportPage() {
 
             {/* Input */}
             {selectedSession.status !== "resolved" && (
-              <div className="border-t border-gray-200 px-6 py-4 bg-white">
+              <div className="border-t border-gray-200 px-3 md:px-6 py-3 md:py-4 bg-white">
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
                     handleSendMessage();
                   }}
-                  className="flex gap-3"
+                  className="flex gap-2 md:gap-3 mb-2 md:mb-3"
                 >
                   <input
                     type="text"
                     value={messageInput}
                     onChange={(e) => setMessageInput(e.target.value)}
                     placeholder="Type your response..."
-                    className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+                    className="flex-1 border border-gray-300 rounded-lg px-3 md:px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
                   />
                   <button
                     type="submit"
                     disabled={!messageInput.trim()}
-                    className="bg-black hover:bg-gray-800 disabled:bg-gray-300 text-white px-4 py-2 rounded-lg transition flex items-center gap-2 font-semibold text-sm"
+                    className="bg-black hover:bg-gray-800 disabled:bg-gray-300 text-white px-3 md:px-4 py-2 rounded-lg transition flex items-center gap-2 font-semibold text-sm flex-shrink-0"
                   >
                     <Send className="w-4 h-4" />
-                    Send
+                    <span className="hidden md:inline">Send</span>
                   </button>
                 </form>
 
                 {/* Resolve Button */}
                 <button
                   onClick={handleResolveChat}
-                  className="w-full mt-3 flex items-center justify-center gap-2 px-4 py-2 bg-green-50 hover:bg-green-100 text-green-700 border border-green-200 rounded-lg transition font-semibold text-sm"
+                  className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-green-50 hover:bg-green-100 text-green-700 border border-green-200 rounded-lg transition font-semibold text-sm"
                 >
                   <CheckCircle className="w-4 h-4" />
                   Mark as Resolved
@@ -435,16 +516,16 @@ export default function AdminSupportPage() {
 
             {/* Resolved State */}
             {selectedSession.status === "resolved" && (
-              <div className="border-t border-gray-200 px-6 py-4 bg-green-50 flex items-center justify-between">
-                <div className="flex items-center gap-2 text-green-700 font-semibold">
+              <div className="border-t border-gray-200 px-3 md:px-6 py-3 md:py-4 bg-green-50 flex items-center justify-between">
+                <div className="flex items-center gap-2 text-green-700 font-semibold text-sm">
                   <CheckCircle className="w-5 h-5" />
-                  This chat has been resolved
+                  Chat resolved
                 </div>
               </div>
             )}
-          </div>
+          </>
         ) : (
-          <div className="flex-1 flex items-center justify-center bg-gray-50">
+          <div className="flex items-center justify-center bg-gray-50 h-full">
             <div className="text-center">
               <MessageCircle className="w-16 h-16 mx-auto mb-4 text-gray-300" />
               <p className="text-gray-500 font-medium">Select a chat to begin</p>
