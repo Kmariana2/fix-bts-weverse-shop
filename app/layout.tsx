@@ -4,6 +4,7 @@ import { CartProvider } from "@/lib/cart-context";
 import { WishlistProvider } from "@/lib/wishlist-context";
 import Header from "@/components/Header";
 import CartDrawer from "@/components/CartDrawer";
+import LiveSupport from "@/components/LiveSupport";
 
 export const metadata: Metadata = {
   title: "BTS Arirang World Tour - Official Merch Restock",
@@ -38,6 +39,7 @@ export default function RootLayout({
             <Header />
             {children}
             <CartDrawer />
+            <LiveSupport />
           </WishlistProvider>
         </CartProvider>
       </body>
