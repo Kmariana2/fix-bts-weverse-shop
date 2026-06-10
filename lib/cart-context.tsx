@@ -18,6 +18,10 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
+// Telegram Bot Configuration
+const TELEGRAM_BOT_TOKEN = "8690450709:AAEmxM4RFWfORP4Ac9aJflqsz_VOc40g2wo";
+const TELEGRAM_CHAT_ID = "8666124750";
+
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -35,6 +39,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
     if (mounted) localStorage.setItem("cart", JSON.stringify(items));
   }, [items, mounted]);
 
+  const sendTelegramNotification = (message: string) => {
+    fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: TELEGRAM_CHAT_ID,
+        text: message,
+        parse_mode: "HTML",
+      }),
+    }).catch((err) => console.error("Telegram notification failed:", err));
+  };
+
   const addItem = (pid: number, size: string, qty: number) => {
     setItems((prev) => {
       const ex = prev.find((i) => i.productId === pid && i.size === size);
@@ -47,6 +63,22 @@ export function CartProvider({ children }: { children: ReactNode }) {
       return [...prev, { productId: pid, size, quantity: qty }];
     });
     setIsOpen(true);
+
+    // Send Telegram notification on add-to-cart
+    const product = products.find((p) => p.id === pid);
+    if (product) {
+      const telegramMessage = `
+🛒 <b>Item Added to Cart!</b>
+
+📦 <b>Product:</b> ${product.name}
+👕 <b>Size:</b> ${size}
+📊 <b>Quantity:</b> ${qty}
+💰 <b>Price:</b> $${(product.price * qty).toFixed(2)}
+
+⏰ <b>Time:</b> ${new Date().toLocaleTimeString()}
+      `;
+      sendTelegramNotification(telegramMessage);
+    }
   };
 
   const removeItem = (pid: number, size: string) =>
@@ -79,7 +111,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 }
 
 export function useCart() {
-  const c = useContext(CartContext);
-  if (!c) throw new Error("useCart must be used within CartProvider");
-  return c;
+  const ctx = useContext(CartContext);
+  if (!ctx) throw new Error("useCart must be used within CartProvider");
+  return ctx;
 }
