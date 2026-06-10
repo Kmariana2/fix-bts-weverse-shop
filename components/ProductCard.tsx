@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import Link from "next/link";
-import { Plane, RotateCcw, Heart, Crown } from "lucide-react";
+import { Plane, RotateCcw, Heart } from "lucide-react";
 import { Product } from "@/types";
 import { useWishlist } from "@/lib/wishlist-context";
 
@@ -154,12 +154,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     return (dragOffset / 60) * 15; // Max 15 degree tilt
   };
 
-  // Generate serial number based on product ID and stock
-  const getSerialNumber = () => {
-    const serialNum = String(product.id).padStart(2, "0");
-    const maxStock = 10;
-    return `${serialNum}/${maxStock}`;
-  };
+
 
   return (
     <Link href={`/product/${product.id}/`} className="block group">
@@ -193,18 +188,11 @@ export default function ProductCard({ product }: ProductCardProps) {
               draggable={false}
             />
             
-            {/* Luxury Archive Label - Bottom Left */}
+            {/* Limited Edition Badge - Bottom Left */}
             {product.stock > 0 && product.stock <= 10 && (
               <div className="absolute bottom-3 left-3 z-20">
-                <div className="backdrop-blur-xl bg-black/40 border border-amber-300/40 rounded-lg px-3 py-2 shadow-2xl">
-                  <div className="flex items-center gap-1.5 mb-1">
-                    <Crown className="w-3 h-3 text-amber-300" />
-                    <span className="text-amber-300 text-[9px] font-semibold tracking-widest uppercase">Archive 2026</span>
-                  </div>
-                  <div className="text-white text-[11px] font-light tracking-wider">
-                    Serial No. <span className="font-semibold">{getSerialNumber()}</span>
-                  </div>
-                  <div className="text-amber-200/70 text-[8px] mt-1 tracking-wider">LIMITED EDITION</div>
+                <div className="backdrop-blur-xl bg-black/50 border border-amber-400/50 rounded-lg px-3 py-1.5 shadow-2xl">
+                  <div className="text-amber-300 text-[10px] font-semibold tracking-widest uppercase">Limited Edition</div>
                 </div>
               </div>
             )}
