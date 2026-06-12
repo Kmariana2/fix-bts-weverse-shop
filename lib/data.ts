@@ -148,6 +148,21 @@ export const products: Product[] = [
     sizes: ["S", "M", "L", "XL", "XXL"],
     description: "Official BTS Hoodie in Red. Classic pullover hoodie with BTS branding.",
   },
+  {
+    id: 11,
+    name: "Zip-up Hoodie (Black)",
+    price: 200.00,
+    image: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663747851738/YEvntXGmyREroMnM.png",
+    images: {
+      front: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663747851738/YEvntXGmyREroMnM.png",
+    },
+    badges: ["EXCLUSIVE", "PRE-ORDER"],
+    shipping: "Shipped from KR",
+    category: "BTS",
+    stock: 10,
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    description: "Official BTS Zip-up Hoodie in Black with APLARI RANG graphic on the back. Premium heavyweight cotton with exclusive tour branding.",
+  },
 ];
 
 export const categories = ["ALL", "BTS"];
