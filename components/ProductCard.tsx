@@ -259,21 +259,21 @@ export default function ProductCard({ product }: ProductCardProps) {
         </p>
         
         {/* Product Badges */}
-        <div className="mt-3 flex flex-wrap gap-2">
+        <div className="mt-2 flex flex-wrap gap-1.5">
           {/* EXCLUSIVE Badge */}
-          <div className="border-2 border-cyan-400 rounded-full px-3 py-1.5 bg-white">
-            <span className="text-cyan-400 text-[11px] font-bold tracking-wider uppercase">Exclusive</span>
+          <div className="border border-cyan-400 rounded-full px-2 py-0.5 bg-white">
+            <span className="text-cyan-400 text-[9px] font-semibold tracking-wide uppercase">Exclusive</span>
           </div>
           
           {/* PRE-ORDER Badge */}
-          <div className="border-2 border-blue-400 rounded-full px-3 py-1.5 bg-white">
-            <span className="text-blue-400 text-[11px] font-bold tracking-wider uppercase">Pre-Order</span>
+          <div className="border border-blue-400 rounded-full px-2 py-0.5 bg-white">
+            <span className="text-blue-400 text-[9px] font-semibold tracking-wide uppercase">Pre-Order</span>
           </div>
           
           {/* Shipped from US Badge */}
-          <div className="border border-gray-300 rounded-full px-3 py-1.5 bg-white flex items-center gap-1.5">
-            <Plane className="w-3 h-3 text-gray-600" />
-            <span className="text-gray-600 text-[11px] font-semibold">Shipped from US</span>
+          <div className="border border-gray-300 rounded-full px-2 py-0.5 bg-white flex items-center gap-1">
+            <Plane className="w-2.5 h-2.5 text-gray-500" />
+            <span className="text-gray-600 text-[9px] font-medium">Shipped from US</span>
           </div>
         </div>
       </div>
