@@ -152,9 +152,9 @@ export const products: Product[] = [
     id: 11,
     name: "Zip-up Hoodie (Black)",
     price: 200.00,
-    image: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663747851738/YEvntXGmyREroMnM.png",
+    image: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663747851738/TSCgzegALrzSfcIy.png",
     images: {
-      front: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663747851738/YEvntXGmyREroMnM.png",
+      front: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663747851738/TSCgzegALrzSfcIy.png",
     },
     badges: ["EXCLUSIVE", "PRE-ORDER"],
     shipping: "Shipped from KR",
