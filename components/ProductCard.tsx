@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import Link from "next/link";
-import { Plane, RotateCcw, Heart } from "lucide-react";
+import { Plane, RotateCcw, Heart, Plane as PlaneIcon } from "lucide-react";
 import { Product } from "@/types";
 import { useWishlist } from "@/lib/wishlist-context";
 
@@ -257,6 +257,25 @@ export default function ProductCard({ product }: ProductCardProps) {
         <p className="text-xs text-gray-500 mt-1 tracking-widest uppercase font-semibold">
           ${product.price.toFixed(2)}
         </p>
+        
+        {/* Product Badges */}
+        <div className="mt-3 flex flex-wrap gap-2">
+          {/* EXCLUSIVE Badge */}
+          <div className="border-2 border-cyan-400 rounded-full px-3 py-1.5 bg-white">
+            <span className="text-cyan-400 text-[11px] font-bold tracking-wider uppercase">Exclusive</span>
+          </div>
+          
+          {/* PRE-ORDER Badge */}
+          <div className="border-2 border-blue-400 rounded-full px-3 py-1.5 bg-white">
+            <span className="text-blue-400 text-[11px] font-bold tracking-wider uppercase">Pre-Order</span>
+          </div>
+          
+          {/* Shipped from US Badge */}
+          <div className="border border-gray-300 rounded-full px-3 py-1.5 bg-white flex items-center gap-1.5">
+            <Plane className="w-3 h-3 text-gray-600" />
+            <span className="text-gray-600 text-[11px] font-semibold">Shipped from US</span>
+          </div>
+        </div>
       </div>
     </Link>
   );
